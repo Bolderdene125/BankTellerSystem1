@@ -1,0 +1,23 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "BankServer\\BankServer.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "NumberTerminal\\NumberTerminal.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "TellerApp\\TellerApp.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "CurrencyDisplay\\CurrencyDisplay.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="BankServer/BankServer.csproj" />
+  <Project Path="BankTests/BankTests.csproj" />
+  <Project Path="CurrencyDisplay/CurrencyDisplay.csproj" Id="3068d7da-c175-4d8e-a826-1f4e2b36de1a" />
+  <Project Path="NumberTerminal/NumberTerminal.csproj" />
+  <Project Path="SocketServer/SocketServer.csproj" />
+  <Project Path="TellerApp/TellerApp.csproj" />
+</Solution>

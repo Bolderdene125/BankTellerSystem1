@@ -1,0 +1,150 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.SignalR.Client
+@implements IAsyncDisposable
+
+<h2 style="text-align:center; color:#005a9e; font-size:2rem; margin:20px 0">
+    💱 ВАЛЮТЫН ХАНШ
+</h2>
+
+<p style="text-align:center; font-size:0.9rem; color:gray">
+    Шинэчлэгдсэн: @_lastUpdated.ToString("HH:mm:ss")
+    @if (_connected)
+    {
+        <span style="color:green"> ● Холбогдсон</span>
+    }
+    else
+    {
+        <span style="color:red"> ● Холбогдоогүй</span>
+    }
+</p>
+
+@if (_rates.Count == 0)
+{
+    <p style="text-align:center">Ачааллаж байна...</p>
+}
+else
+{
+    <table style="width:100%; max-width:700px; margin:0 auto;
+        border-collapse:collapse; font-size:1.3rem;">
+        <thead>
+            <tr style="background:#005a9e; color:white;">
+                <th style="padding:14px; text-align:left">Валют</th>
+                <th style="padding:14px; text-align:right">Авах (₮)</th>
+                <th style="padding:14px; text-align:right">Зарах (₮)</th>
+                <th style="padding:14px; text-align:right">Цаг</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var rate in _rates.Values)
+            {
+                <tr style="border-bottom:1px solid #ddd;
+                    background:@(rate.IsNew ? "#fffde7" : "white")">
+                    <td style="padding:14px; font-weight:bold; font-size:1.5rem">
+                        @GetFlag(rate.Currency) @rate.Currency
+                    </td>
+                    <td style="padding:14px; text-align:right; color:#cc3300">
+                        @rate.BuyRate.ToString("N0")
+                    </td>
+                    <td style="padding:14px; text-align:right; color:#006600">
+                        @rate.SellRate.ToString("N0")
+                    </td>
+                    <td style="padding:14px; text-align:right;
+                        font-size:0.9rem; color:gray">
+                        @rate.UpdatedAt.ToString("HH:mm")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Dictionary<string, RateView> _rates = new();
+    private HubConnection? _hub;
+    private bool _connected;
+    private DateTime _lastUpdated = DateTime.Now;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRates();
+        await ConnectHub();
+    }
+
+    /// <summary>BankServer-ийн API-аас анхны ханшийг авна.</summary>
+    private async Task LoadRates()
+    {
+        try
+        {
+            using var http = new HttpClient();
+            var rates = await http.GetFromJsonAsync<List<ExchangeRate>>(
+                "http://localhost:5000/api/exchangerate");
+
+            if (rates is null) return;
+
+            foreach (var r in rates)
+                _rates[r.Currency] = new RateView(
+                    r.Currency, r.BuyRate, r.SellRate, r.UpdatedAt, false);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"LoadRates алдаа: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// SignalR Hub-д холбогдоно.
+    /// Теллер ханш өөрчлөхөд "ReceiveRateUpdate" event ирж
+    /// дэлгэц refresh хийлгүйгээр шинэчлэгдэнэ.
+    /// </summary>
+    private async Task ConnectHub()
+    {
+        try
+        {
+            _hub = new HubConnectionBuilder()
+                .WithUrl("http://localhost:5000/bankhub")
+                .WithAutomaticReconnect()
+                .Build();
+
+            _hub.On<ExchangeRate>("ReceiveRateUpdate", rate =>
+            {
+                _rates[rate.Currency] = new RateView(
+                    rate.Currency, rate.BuyRate, rate.SellRate,
+                    rate.UpdatedAt, IsNew: true);
+                _lastUpdated = DateTime.Now;
+                // InvokeAsync: SignalR өөр thread-д ажиллах тул шаардлагатай
+                InvokeAsync(StateHasChanged);
+            });
+
+            await _hub.StartAsync();
+            _connected = true;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"ConnectHub алдаа: {ex.Message}");
+        }
+    }
+
+    private static string GetFlag(string currency) => currency switch
+    {
+        "USD" => "🇺🇸",
+        "EUR" => "🇪🇺",
+        "CNY" => "🇨🇳",
+        "RUB" => "🇷🇺",
+        _ => "💰"
+    };
+
+    /// <summary>Component устах үед SignalR холболтыг хаана.</summary>
+    public async ValueTask DisposeAsync()
+    {
+        if (_hub is not null)
+            await _hub.DisposeAsync();
+    }
+
+    record RateView(string Currency, decimal BuyRate, decimal SellRate,
+                    DateTime UpdatedAt, bool IsNew);
+
+    record ExchangeRate(string Currency, decimal BuyRate, decimal SellRate,
+                        DateTime UpdatedAt);
+}

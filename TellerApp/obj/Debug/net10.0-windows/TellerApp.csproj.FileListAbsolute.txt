@@ -1,0 +1,16 @@
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\bin\Debug\net10.0-windows\TellerApp.exe
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\bin\Debug\net10.0-windows\TellerApp.deps.json
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\bin\Debug\net10.0-windows\TellerApp.runtimeconfig.json
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\bin\Debug\net10.0-windows\TellerApp.dll
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\bin\Debug\net10.0-windows\TellerApp.pdb
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\obj\Debug\net10.0-windows\TellerApp.Form1.resources
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\obj\Debug\net10.0-windows\TellerApp.csproj.GenerateResource.cache
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\obj\Debug\net10.0-windows\TellerApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\obj\Debug\net10.0-windows\TellerApp.AssemblyInfoInputs.cache
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\obj\Debug\net10.0-windows\TellerApp.AssemblyInfo.cs
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\obj\Debug\net10.0-windows\TellerApp.csproj.CoreCompileInputs.cache
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\obj\Debug\net10.0-windows\TellerApp.dll
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\obj\Debug\net10.0-windows\refint\TellerApp.dll
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\obj\Debug\net10.0-windows\TellerApp.pdb
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\obj\Debug\net10.0-windows\TellerApp.genruntimeconfig.cache
+C:\Documents\WindowsProgramming\BankTellerSystem\TellerApp\obj\Debug\net10.0-windows\ref\TellerApp.dll
