@@ -1,21 +1,11 @@
 ﻿using System.Threading.Channels;
-using BankSystem.Shared.Enums;
+using BankServer.Domain.Models;
 
 namespace BankServer.Business;
 
 /// <summary>
-/// Дарааллын тасалбарын дотоод загвар.
-/// Shared-ийн QueueTicket-ийн талбарууд тестийн гэрээтэй зөрчилдөх тул
-/// дотоод record ашиглана: Number, IssuedAt, ServiceType.
-/// </summary>
-internal record QueueTicket(int Number, DateTime IssuedAt, string ServiceType);
-
-/// <summary>
-/// Банкны дугаарын дарааллыг хянах үйлчилгээ.
-/// Гурван асуудлыг шийднэ:
-///   1. Давхар дугаар олгохгүй — Interlocked.Increment
-///   2. Нэг дугаарыг хоёр теллерт өгөхгүй — TryRead atomic
-///   3. FIFO дараалал алдагдахгүй — Channel
+/// Тасалбарын дарааллыг хянана. Гурван асуудлыг шийдсэн:
+/// давхар дугаар олгохгүй, давхар дуудахгүй, FIFO дараалал алдагдахгүй.
 /// </summary>
 public class TicketQueueService
 {
@@ -26,37 +16,35 @@ public class TicketQueueService
     private volatile int _currentCalledNumber = 0;
 
     /// <summary>
-    /// Thread-safe FIFO дараалал.
-    /// WriteAsync — эцэст нэмнэ, TryRead — эхнээс авна.
-    /// Capacity=100: дараалал дүүрвэл шинэ хүсэлт хүлээнэ, хаяхгүй.
+    /// Thread-safe дараалал. WriteAsync → эцэст нэмнэ,
+    /// TryRead → эхнээс авна (FIFO).
+    /// Capacity=100: дараалал дүүрвэл хүлээнэ, хаяхгүй.
     /// </summary>
-    private readonly Channel<QueueTicket> _channel =
-        Channel.CreateBounded<QueueTicket>(
-            new BoundedChannelOptions(100) { FullMode = BoundedChannelFullMode.Wait });
+    private readonly Channel<QueueTicket> _ticketChannel =
+        Channel.CreateBounded<QueueTicket>(new BoundedChannelOptions(100)
+        {
+            FullMode = BoundedChannelFullMode.Wait
+        });
 
     /// <summary>
+    /// Дугаар олгох үед нэгэн зэрэг хоёр хүсэлт ирвэл нэг нь хүлээдэг lock.
     /// async/await дотор lock{} ажиллахгүй тул SemaphoreSlim ашиглана.
-    /// Нэгэн зэрэг хоёр хүсэлт ирвэл нэг нь хүлээнэ — давхар дугаараас сэргийлнэ.
     /// </summary>
     private readonly SemaphoreSlim _issueLock = new(1, 1);
 
     /// <summary>
     /// Шинэ тасалбар олгож дарааллд нэмнэ.
-    /// Interlocked.Increment: CPU түвшинд нэг алхам тул дугаар хэзээ ч давтагдахгүй.
-    /// TicketStatus.Waiting — Shared.Enums-аас авна, дотоод логикт ашиглана.
+    /// Interlocked.Increment ашигласан учир дугаар хэзээ ч давтагдахгүй.
     /// </summary>
     public async Task<QueueTicket> IssueTicketAsync(string serviceType)
     {
         await _issueLock.WaitAsync();
         try
         {
+            // Interlocked.Increment: i++ биш, CPU түвшинд нэг алхам — thread-safe
             int number = Interlocked.Increment(ref _lastNumber);
             var ticket = new QueueTicket(number, DateTime.Now, serviceType);
-
-            // TicketStatus.Waiting — Shared.Enums ашиглана
-            _ = TicketStatus.Waiting; // enum-г дотоод бүртгэлд ашиглаж байгааг тэмдэглэнэ
-
-            await _channel.Writer.WriteAsync(ticket);
+            await _ticketChannel.Writer.WriteAsync(ticket);
             return ticket;
         }
         finally
@@ -68,21 +56,24 @@ public class TicketQueueService
 
     /// <summary>
     /// Дарааллаас дараагийн тасалбарыг авна.
-    /// TryRead atomic — хоёр теллер нэгэн зэрэг дарсан ч нэг дугаар хоёрт очихгүй.
-    /// Дараалал хоосон үед хүлээхгүй, сүүлийн дуудсан дугаарыг буцаана.
+    /// TryRead atomic тул хоёр теллер нэгэн зэрэг дарсан ч
+    /// нэг дугаар хоёрт очихгүй.
+    /// WaitToReadAsync биш — дараалал хоосон үед хүлээхгүй,
+    /// тэр даруй сүүлийн дугаарыг буцаана.
     /// </summary>
     public Task<int> CallNextAsync()
     {
-        if (_channel.Reader.TryRead(out var ticket))
+        if (_ticketChannel.Reader.TryRead(out var ticket))
         {
             _currentCalledNumber = ticket.Number;
             return Task.FromResult(ticket.Number);
         }
+
         return Task.FromResult(_currentCalledNumber);
     }
 
-    /// <summary>Одоо дараалалд хүлээж байгаа хүний тоо.</summary>
-    public int GetQueueCount() => _channel.Reader.Count;
+    /// <summary>Одоо хүлээж байгаа хүний тоо.</summary>
+    public int GetQueueCount() => _ticketChannel.Reader.Count;
 
     /// <summary>Теллер хамгийн сүүлд дуудсан дугаар.</summary>
     public int GetCurrentNumber() => _currentCalledNumber;

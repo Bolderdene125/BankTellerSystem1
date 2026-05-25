@@ -17,9 +17,6 @@ builder.Services.AddScoped(sp => new HttpClient
 // BankServerUrl-г inject хийхийн тулд wrapper класс ашиглана
 builder.Services.AddSingleton(new BankServerConfig(bankServerUrl));
 
-// Бүх network interface-д сонсоно — өөр компьютераас хандаж болно
-builder.WebHost.UseUrls("http://0.0.0.0:5186");
-
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

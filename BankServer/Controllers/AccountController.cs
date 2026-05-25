@@ -1,16 +1,10 @@
 ﻿using BankServer.Business;
 using BankServer.Domain.DTOs;
-using BankSystem.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankServer.Controllers;
 
-/// <summary>
-/// Дансны мэдээлэл харах болон мөнгө шилжүүлэх endpoint-ууд.
-/// GET  /api/account         — бүх дансны жагсаалт
-/// GET  /api/account/{id}    — нэг дансны мэдээлэл
-/// POST /api/account/transfer — мөнгө шилжүүлэх
-/// </summary>
+/// <summary>Дансны мэдээлэл харах, мөнгө шилжүүлэх endpoint-ууд.</summary>
 [ApiController]
 [Route("api/[controller]")]
 public class AccountController : ControllerBase
@@ -22,49 +16,42 @@ public class AccountController : ControllerBase
         _accountService = accountService;
     }
 
-    /// <summary>Идэвхтэй бүх дансны жагсаалт буцаана.</summary>
+    /// <summary>Бүх дансны жагсаалт. GET /api/account</summary>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<AccountResponseDto>>> GetAll()
-    {
-        var accounts = await _accountService.GetAllAccountsAsync();
-        return Ok(accounts.Select(a => new AccountResponseDto(
-            a.AccountNumber, a.OwnerName, a.Currency, a.Balance, a.IsActive)));
-    }
+    public ActionResult<IEnumerable<AccountResponseDto>> GetAll() =>
+        Ok(_accountService.GetAllAccounts()
+            .Select(a => new AccountResponseDto(
+                a.AccountNumber, a.OwnerName, a.MNT, a.USD)));
 
-    /// <summary>Дансны дугаараар нэг данс хайна.</summary>
+    /// <summary>Нэг дансны мэдээлэл. GET /api/account/ACC001</summary>
     [HttpGet("{accountNumber}")]
-    public async Task<ActionResult<AccountResponseDto>> Get(string accountNumber)
+    public ActionResult<AccountResponseDto> Get(string accountNumber)
     {
-        var account = await _accountService.GetByAccountNumberAsync(accountNumber);
+        var account = _accountService.GetAccount(accountNumber);
         if (account is null) return NotFound("Данс олдсонгүй");
 
         return Ok(new AccountResponseDto(
-            account.AccountNumber, account.OwnerName,
-            account.Currency, account.Balance, account.IsActive));
+            account.AccountNumber, account.OwnerName, account.MNT, account.USD));
     }
 
     /// <summary>
-    /// А данснаас Б данс руу мөнгө шилжүүлнэ.
-    /// TransferRequest — Shared.DTOs-аас авна:
-    ///   FromAccountNumber, ToAccountNumber, Amount, TellerWindowId
-    /// TransferResponse — Shared.DTOs-аас авна:
-    ///   Success, Message, TransactionId
+    /// Мөнгө шилжүүлнэ. POST /api/account/transfer
+    /// Body: { "fromAccount": "ACC001", "toAccount": "ACC002", "amount": 100000 }
     /// </summary>
     [HttpPost("transfer")]
-    public async Task<ActionResult<TransferResponse>> Transfer(
-        [FromBody] TransferRequest req)
+    public async Task<ActionResult<TransferResponseDto>> Transfer(
+        [FromBody] TransferRequestDto req)
     {
-        if (string.IsNullOrEmpty(req.FromAccountNumber) ||
-            string.IsNullOrEmpty(req.ToAccountNumber) ||
+        if (string.IsNullOrEmpty(req.FromAccount) ||
+            string.IsNullOrEmpty(req.ToAccount) ||
             req.Amount <= 0)
-            return BadRequest(new TransferResponse
-            { Success = false, Message = "Дутуу мэдээлэл" });
+            return BadRequest(new TransferResponseDto(false, "Дутуу мэдээлэл"));
 
         var (success, message) = await _accountService.TransferAsync(
-            req.FromAccountNumber, req.ToAccountNumber, req.Amount);
+            req.FromAccount, req.ToAccount, req.Amount);
 
         return success
-            ? Ok(new TransferResponse { Success = true, Message = message })
-            : BadRequest(new TransferResponse { Success = false, Message = message });
+            ? Ok(new TransferResponseDto(true, message))
+            : BadRequest(new TransferResponseDto(false, message));
     }
 }

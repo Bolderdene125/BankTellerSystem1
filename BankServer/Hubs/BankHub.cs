@@ -3,29 +3,22 @@
 namespace BankServer.Hubs;
 
 /// <summary>
-/// SignalR Hub — бүх клиентүүдийг холбоно.
-/// TellerApp, CurrencyDisplay, SocketServer энд холбогдоно.
+/// Клиентүүд энэ Hub-д WebSocket-ээр холбогдоно.
+/// Controller-ууд IHubContext дамжуулж бүх клиентэд мэдэгдэл явуулна.
 /// </summary>
 public class BankHub : Hub
 {
+    /// <summary>Клиент холбогдоход консолд бүртгэнэ.</summary>
     public override async Task OnConnectedAsync()
     {
         Console.WriteLine($"[Hub] Холбогдлоо: {Context.ConnectionId}");
         await base.OnConnectedAsync();
     }
 
+    /// <summary>Клиент салахад консолд бүртгэнэ.</summary>
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        Console.WriteLine($"[Hub] Саллаа: {Context.ConnectionId}");
+        Console.WriteLine($"[Hub] Салалаа: {Context.ConnectionId}");
         await base.OnDisconnectedAsync(exception);
-    }
-
-    /// <summary>
-    /// Теллер дугаар дуудахад энэ метод дуудагдана.
-    /// Дугаар болон теллерийн нэрийг бүх дэлгэцэнд явуулна.
-    /// </summary>
-    public async Task NotifyTellerCall(int number, string tellerName)
-    {
-        await Clients.All.SendAsync("ReceiveTellerCall", number, tellerName);
     }
 }

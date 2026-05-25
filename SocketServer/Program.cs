@@ -1,4 +1,7 @@
-using BankSystem.Shared.DTOs;
+﻿// SocketServer/Program.cs
+// TCP Socket сервер — дугаарын дэлгэцүүдтэй холбогдоно.
+// BankServer-аас SignalR-ээр дугаар авч, дэлгэцүүдэд TCP-ээр явуулна.
+
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -7,151 +10,69 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 Console.WriteLine("Socket сервер эхэлж байна...");
 
-// roomId → TcpClient  e.g. "305" → компьютер Б-ийн дэлгэц
-var clients    = new Dictionary<string, TcpClient>(StringComparer.OrdinalIgnoreCase);
+// Холбогдсон клиентүүдийн жагсаалт — thread-safe
+var clients = new List<TcpClient>();
 var clientLock = new object();
 
+// TCP Listener — дэлгэцүүд 5001 port-д холбогдоно
 var listener = new TcpListener(IPAddress.Any, 5001);
 listener.Start();
 Console.WriteLine("TCP Listener: 0.0.0.0:5001 дээр хүлээж байна...");
 
+// SignalR — BankServer-аас дугаар авна
 var hub = new HubConnectionBuilder()
     .WithUrl("http://localhost:5000/bankhub")
     .WithAutomaticReconnect()
     .Build();
 
-// Теллер "Дараагийн үйлчлүүлэгч" дарахад ирнэ
-// roomId = "305" эсвэл "306" — зөвхөн тухайн дэлгэцэнд явуулна
-hub.On<int, string>("ReceiveTellerCall", async (number, roomId) =>
-{
-    Console.WriteLine($"[TellerCall] Дугаар {number:D3} → Өрөө {roomId}");
-
-    var msg = new SocketMessage
-    {
-        Type    = "TELLER_CALL",
-        Payload = JsonSerializer.Serialize(new
-        {
-            number   = number,
-            roomId   = roomId,
-            time     = DateTime.Now.ToString("HH:mm")
-        })
-    };
-
-    await SendToRoomAsync(roomId, JsonSerializer.Serialize(msg));
-});
-
-// NumberTerminal дугаар олгоход бүх дэлгэцэнд явуулна (optional)
+// BankServer-аас дугаар ирэхэд бүх дэлгэцэнд явуулна
 hub.On<int>("ReceiveNumberUpdate", async (number) =>
 {
-    Console.WriteLine($"[NumberUpdate] Дугаар {number:D3} → бүх дэлгэцэнд");
-    var msg = new SocketMessage
+    Console.WriteLine($"Дугаар авлаа: {number} → бүх дэлгэцэнд явуулж байна...");
+
+    var message = JsonSerializer.Serialize(new { type = "SHOW_NUMBER", number });
+    var data = Encoding.UTF8.GetBytes(message + "\n");
+
+    List<TcpClient> deadClients = new();
+
+    lock (clientLock)
     {
-        Type    = "SHOW_NUMBER",
-        Payload = JsonSerializer.Serialize(new
+        foreach (var client in clients)
         {
-            number = number,
-            time   = DateTime.Now.ToString("HH:mm")
-        })
-    };
-    await SendToAllAsync(JsonSerializer.Serialize(msg));
+            try
+            {
+                if (client.Connected)
+                    client.GetStream().WriteAsync(data).AsTask().Wait();
+                else
+                    deadClients.Add(client);
+            }
+            catch
+            {
+                deadClients.Add(client);
+            }
+        }
+
+        // Салсан клиентүүдийг устгана
+        foreach (var dead in deadClients)
+            clients.Remove(dead);
+    }
 });
 
 await hub.StartAsync();
-Console.WriteLine("SignalR: BankServer-т холбогдлоо OK");
+Console.WriteLine("SignalR: BankServer-т холбогдлоо ✅");
 
-// TCP клиент (NumberDisplay) холбогдохыг хүлээх
+// Клиент холбогдохыг хүлээх — background task
 _ = Task.Run(async () =>
 {
     while (true)
     {
         var client = await listener.AcceptTcpClientAsync();
-        _ = Task.Run(() => HandleClientAsync(client));
+        Console.WriteLine($"Дэлгэц холбогдлоо: {client.Client.RemoteEndPoint}");
+
+        lock (clientLock)
+            clients.Add(client);
     }
 });
 
 Console.WriteLine("Socket сервер бэлэн. Ctrl+C дарж зогсооно.");
 await Task.Delay(Timeout.Infinite);
-
-// ------------------------------------------------------------
-// NumberDisplay холбогдохдоо эхний мессежээр roomId явуулна
-// {"type":"REGISTER","payload":"305"}
-// ------------------------------------------------------------
-async Task HandleClientAsync(TcpClient client)
-{
-    var ep = client.Client.RemoteEndPoint;
-    Console.WriteLine($"Клиент холбогдлоо: {ep}");
-    try
-    {
-        var stream = client.GetStream();
-        var buf    = new byte[256];
-        int n      = await stream.ReadAsync(buf);
-        var json   = Encoding.UTF8.GetString(buf, 0, n).Trim();
-        var msg    = JsonSerializer.Deserialize<SocketMessage>(json);
-
-        if (msg?.Type == "REGISTER" && !string.IsNullOrEmpty(msg.Payload))
-        {
-            var roomId = msg.Payload.Trim('"');
-            lock (clientLock)
-            {
-                if (clients.ContainsKey(roomId))
-                    clients[roomId].Dispose();
-                clients[roomId] = client;
-            }
-            Console.WriteLine($"Бүртгэлт: Өрөө {roomId} = {ep}");
-
-            // Холбогдсон тухай баталгаа явуулна
-            var ack = Encoding.UTF8.GetBytes(
-                JsonSerializer.Serialize(new SocketMessage
-                    { Type = "ACK", Payload = $"\"Өрөө {roomId} бүртгэгдлээ\"" }) + "\n");
-            await stream.WriteAsync(ack);
-        }
-        else
-        {
-            Console.WriteLine($"Бүртгэл амжилтгүй: {json}");
-            client.Dispose();
-        }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"HandleClient алдаа: {ex.Message}");
-        client.Dispose();
-    }
-}
-
-async Task SendToRoomAsync(string roomId, string message)
-{
-    var data = Encoding.UTF8.GetBytes(message + "\n");
-    TcpClient? target;
-    lock (clientLock)
-        clients.TryGetValue(roomId, out target);
-
-    if (target == null)
-    {
-        Console.WriteLine($"[WARN] Өрөө {roomId} холбогдоогүй байна");
-        return;
-    }
-    try
-    {
-        await target.GetStream().WriteAsync(data);
-    }
-    catch
-    {
-        lock (clientLock) clients.Remove(roomId);
-        Console.WriteLine($"[WARN] Өрөө {roomId} салсан — жагсаалтаас хаслаа");
-    }
-}
-
-async Task SendToAllAsync(string message)
-{
-    var data = Encoding.UTF8.GetBytes(message + "\n");
-    List<string> dead = new();
-    lock (clientLock)
-    {
-        foreach (var (id, c) in clients)
-        {
-            try { c.GetStream().WriteAsync(data).AsTask().Wait(); }
-            catch { dead.Add(id); }
-        }
-        foreach (var id in dead) clients.Remove(id);
-    }
-}

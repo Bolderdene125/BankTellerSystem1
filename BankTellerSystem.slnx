@@ -1,8 +1,6 @@
 <Solution>
-  <Project Path="../../../1/BankTellerSystem/NumberDisplay/NumberDisplay.csproj" />
   <Project Path="BankDll/BankDll.csproj" Id="55005c0d-edae-4d83-872f-bb2a7df88efe" />
   <Project Path="BankServer/BankServer.csproj" />
-  <Project Path="BankSystem.Shared/BankSystem.Shared.csproj" Id="5f8c828c-19da-412d-b82c-a7a5964d69b6" />
   <Project Path="BankTests/BankTests.csproj" />
   <Project Path="CurrencyDisplay/CurrencyDisplay.csproj" Id="3068d7da-c175-4d8e-a826-1f4e2b36de1a" />
   <Project Path="NumberTerminal/NumberTerminal.csproj" />

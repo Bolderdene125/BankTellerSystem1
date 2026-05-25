@@ -1,17 +1,12 @@
 ﻿using BankServer.Business;
 using BankServer.Domain.DTOs;
 using BankServer.Hubs;
-using BankSystem.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
 namespace BankServer.Controllers;
 
-/// <summary>
-/// Валютын ханш харах болон шинэчлэх endpoint-ууд.
-/// GET /api/exchangerate              — бүх ханш
-/// PUT /api/exchangerate/{currencyCode} — ханш шинэчлэх + SignalR broadcast
-/// </summary>
+/// <summary>Ханш харах, теллер шинэчлэх endpoint-ууд.</summary>
 [ApiController]
 [Route("api/[controller]")]
 public class ExchangeRateController : ControllerBase
@@ -19,41 +14,38 @@ public class ExchangeRateController : ControllerBase
     private readonly ExchangeRateService _rateService;
     private readonly IHubContext<BankHub> _hub;
 
-    public ExchangeRateController(
-        ExchangeRateService rateService, IHubContext<BankHub> hub)
+    public ExchangeRateController(ExchangeRateService rateService, IHubContext<BankHub> hub)
     {
         _rateService = rateService;
         _hub = hub;
     }
 
-    /// <summary>Бүх валютын ханшийн жагсаалт буцаана.</summary>
+    /// <summary>Бүх валютын ханш. GET /api/exchangerate</summary>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ExchangeRateResponseDto>>> GetAll()
-    {
-        var rates = await _rateService.GetAllAsync();
-        return Ok(rates.Select(r => new ExchangeRateResponseDto(
-            r.CurrencyCode, r.CurrencyName, r.BuyRate, r.SellRate, r.UpdatedAt)));
-    }
+    public ActionResult<IEnumerable<ExchangeRateResponseDto>> GetAll() =>
+        Ok(_rateService.GetAll()
+            .Select(r => new ExchangeRateResponseDto(
+                r.Currency, r.BuyRate, r.SellRate, r.UpdatedAt)));
 
     /// <summary>
-    /// Ханш шинэчилж SignalR-ээр Blazor дэлгэцэнд realtime явуулна.
-    /// UpdateRateRequest — Shared.DTOs-аас авна:
-    ///   BuyRate, SellRate, TellerWindowId
+    /// Ханш шинэчилнэ. SignalR-ээр Blazor-д тэр даруй явуулна.
+    /// PUT /api/exchangerate/USD
+    /// Body: { "buyRate": 3450, "sellRate": 3470 }
     /// </summary>
-    [HttpPut("{currencyCode}")]
+    [HttpPut("{currency}")]
     public async Task<ActionResult<ExchangeRateResponseDto>> Update(
-        string currencyCode, [FromBody] UpdateRateRequest req)
+        string currency, [FromBody] RateUpdateRequestDto req)
     {
-        if (!await _rateService.UpdateRateAsync(currencyCode, req.BuyRate, req.SellRate))
-            return NotFound($"'{currencyCode}' валют олдсонгүй");
+        if (!_rateService.Update(currency, req.BuyRate, req.SellRate))
+            return NotFound($"'{currency}' валют олдсонгүй");
 
-        var updated = await _rateService.GetByCurrencyCodeAsync(currencyCode);
+        var updated = _rateService.Get(currency)!;
         var dto = new ExchangeRateResponseDto(
-            updated!.CurrencyCode, updated.CurrencyName,
-            updated.BuyRate, updated.SellRate, updated.UpdatedAt);
+            updated.Currency, updated.BuyRate, updated.SellRate, updated.UpdatedAt);
 
-        // SignalR — CurrencyDisplay Blazor-д realtime явуулна
+        // SignalR — Blazor дэлгэц тэр даруй шинэчлэгдэнэ
         await _hub.Clients.All.SendAsync("ReceiveRateUpdate", dto);
+
         return Ok(dto);
     }
 }

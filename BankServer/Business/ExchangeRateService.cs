@@ -1,54 +1,43 @@
-﻿using BankServer.Data;
-using BankSystem.Shared.Entities;
-using BankSystem.Shared.Interfaces;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Concurrent;
+using BankServer.Domain.Models;
 
 namespace BankServer.Business;
 
 /// <summary>
-/// ICurrencyRateRepository interface-г хэрэгжүүлнэ.
-/// Валютын ханш унших, шинэчлэх үйлдлүүд энд байна.
-/// Теллер ханш өөрчлөхөд SignalR-ээр Blazor дэлгэцэд realtime явуулна.
+/// Валютын ханшийг санах ойд хадгалдаг service.
+/// ConcurrentDictionary: нэмэлт lock шаардахгүй, thread-safe.
 /// </summary>
-public class ExchangeRateService(BankDbContext db) : ICurrencyRateRepository
+public class ExchangeRateService
 {
-    // ── ICurrencyRateRepository хэрэгжүүлэлт ────────────────────────────
-
-    /// <summary>Бүх валютын ханшийн жагсаалт — ICurrencyRateRepository гэрээ.</summary>
-    public async Task<IEnumerable<currencyRate>> GetAllAsync() =>
-        await db.CurrencyRates.ToListAsync();
-
-    /// <summary>Валютын кодоор ханш хайна — ICurrencyRateRepository гэрээ.</summary>
-    public async Task<currencyRate?> GetByCurrencyCodeAsync(string currencyCode) =>
-        await db.CurrencyRates
-            .FirstOrDefaultAsync(r => r.CurrencyCode == currencyCode);
-
-    /// <summary>Ханш шинэчилнэ — ICurrencyRateRepository гэрээ.</summary>
-    public async Task UpdateAsync(currencyRate rate)
+    private readonly ConcurrentDictionary<string, ExchangeRate> _rates = new()
     {
-        db.CurrencyRates.Update(rate);
-        await db.SaveChangesAsync();
-    }
+        ["USD"] = new ExchangeRate { Currency = "USD", BuyRate = 3440, SellRate = 3460, UpdatedAt = DateTime.Now },
+        ["EUR"] = new ExchangeRate { Currency = "EUR", BuyRate = 3750, SellRate = 3780, UpdatedAt = DateTime.Now },
+        ["CNY"] = new ExchangeRate { Currency = "CNY", BuyRate = 475, SellRate = 480, UpdatedAt = DateTime.Now },
+        ["RUB"] = new ExchangeRate { Currency = "RUB", BuyRate = 38, SellRate = 40, UpdatedAt = DateTime.Now },
+    };
 
-    // ── Нэмэлт үйлдлүүд ─────────────────────────────────────────────────
+    /// <summary>Бүх валютын ханш.</summary>
+    public IEnumerable<ExchangeRate> GetAll() => _rates.Values;
+
+    /// <summary>Нэг валютын ханш. Байхгүй бол null.</summary>
+    public ExchangeRate? Get(string currency) =>
+        _rates.TryGetValue(currency, out var rate) ? rate : null;
 
     /// <summary>
-    /// Валютын ханшийг шинэчилнэ — ExchangeRateController дуудна.
-    /// Амжилттай бол true, валют олдохгүй бол false буцаана.
+    /// Теллер ханш өөрчлөхөд дуудагдана.
+    /// Шинэчилсний дараа Controller SignalR-ээр Blazor-д мэдэгдэнэ.
     /// </summary>
-    public async Task<bool> UpdateRateAsync(
-        string currencyCode, decimal buyRate, decimal sellRate)
+    public bool Update(string currency, decimal buyRate, decimal sellRate)
     {
-        var rate = await db.CurrencyRates
-            .FirstOrDefaultAsync(r => r.CurrencyCode == currencyCode);
-
-        if (rate is null) return false;
-
-        rate.BuyRate = buyRate;
-        rate.SellRate = sellRate;
-        rate.UpdatedAt = DateTime.UtcNow;
-
-        await db.SaveChangesAsync();
+        if (!_rates.ContainsKey(currency)) return false;
+        _rates[currency] = new ExchangeRate
+        {
+            Currency = currency,
+            BuyRate = buyRate,
+            SellRate = sellRate,
+            UpdatedAt = DateTime.Now
+        };
         return true;
     }
 }

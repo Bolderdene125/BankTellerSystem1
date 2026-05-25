@@ -1,29 +1,15 @@
 ﻿using BankServer.Business;
-using BankServer.Data;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace BankTests;
 
 /// <summary>
-/// AccountService-ийн тестүүд.
-/// InMemory database ашигладаг тул SQLite суулгах шаардлагагүй.
+/// AccountService-ийн гүйлгээний логик,
+/// алдааны тохиолдол, concurrent гүйлгээний тестүүд.
 /// </summary>
 public class AccountServiceTests
 {
-    /// <summary>
-    /// Тест бүрт тусдаа InMemory database үүсгэнэ.
-    /// Тестүүд бие биенд нөлөөлөхгүй.
-    /// </summary>
-    private static AccountService NewService()
-    {
-        var options = new DbContextOptionsBuilder<BankDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString())
-            .Options;
-        var db = new BankDbContext(options);
-        db.Database.EnsureCreated(); // Seed өгөгдөл нэмнэ
-        return new AccountService(db);
-    }
+    private AccountService NewService() => new();
 
     /// <summary>Зөв мэдээллээр гүйлгээ амжилттай болох ёстой.</summary>
     [Fact]
@@ -74,29 +60,30 @@ public class AccountServiceTests
     public async Task Transfer_BalanceUpdatesCorrectly()
     {
         var svc = NewService();
-        var fromBefore = (await svc.GetAccountAsync("ACC001"))!.MNT;
-        var toBefore = (await svc.GetAccountAsync("ACC002"))!.MNT;
+        var fromBefore = svc.GetAccount("ACC001")!.MNT;
+        var toBefore = svc.GetAccount("ACC002")!.MNT;
 
         await svc.TransferAsync("ACC001", "ACC002", 100_000);
 
-        Assert.Equal(fromBefore - 100_000, (await svc.GetAccountAsync("ACC001"))!.MNT);
-        Assert.Equal(toBefore + 100_000, (await svc.GetAccountAsync("ACC002"))!.MNT);
+        Assert.Equal(fromBefore - 100_000, svc.GetAccount("ACC001")!.MNT);
+        Assert.Equal(toBefore + 100_000, svc.GetAccount("ACC002")!.MNT);
     }
 
     /// <summary>
-    /// Нэгэн зэрэг 10 гүйлгээ ирэхэд balance давхар хасагдахгүйг шалгана.
+    /// Нэгэн зэрэг 10 гүйлгээ ирэхэд balance хоёр дахин хасагдахгүйг шалгана.
+    /// Race condition байхгүйг баталгаажуулах гол тест.
     /// </summary>
     [Fact]
     public async Task Transfer_Concurrent_BalanceCorrect()
     {
         var svc = NewService();
-        var before = (await svc.GetAccountAsync("ACC001"))!.MNT;
+        var before = svc.GetAccount("ACC001")!.MNT;
 
         var tasks = Enumerable.Range(0, 10)
             .Select(_ => svc.TransferAsync("ACC001", "ACC002", 100_000));
         var results = await Task.WhenAll(tasks);
 
-        var after = (await svc.GetAccountAsync("ACC001"))!.MNT;
+        var after = svc.GetAccount("ACC001")!.MNT;
         var successCount = results.Count(r => r.Success);
 
         Assert.Equal(before - successCount * 100_000m, after);
@@ -104,10 +91,10 @@ public class AccountServiceTests
 
     /// <summary>Данс олдвол мэдээлэл буцаана.</summary>
     [Fact]
-    public async Task GetAccount_ExistingAccount_ReturnsAccount()
+    public void GetAccount_ExistingAccount_ReturnsAccount()
     {
         var svc = NewService();
-        var account = await svc.GetAccountAsync("ACC001");
+        var account = svc.GetAccount("ACC001");
 
         Assert.NotNull(account);
         Assert.Equal("ACC001", account.AccountNumber);
@@ -115,18 +102,18 @@ public class AccountServiceTests
 
     /// <summary>Байхгүй данс хайхад null буцаана.</summary>
     [Fact]
-    public async Task GetAccount_NonExistent_ReturnsNull()
+    public void GetAccount_NonExistent_ReturnsNull()
     {
         var svc = NewService();
-        Assert.Null(await svc.GetAccountAsync("INVALID"));
+        Assert.Null(svc.GetAccount("INVALID"));
     }
 
     /// <summary>Бүх дансны жагсаалт хоосон биш байх ёстой.</summary>
     [Fact]
-    public async Task GetAllAccounts_ReturnsAccounts()
+    public void GetAllAccounts_ReturnsAccounts()
     {
         var svc = NewService();
-        var accounts = (await svc.GetAllAccountsAsync()).ToList();
+        var accounts = svc.GetAllAccounts().ToList();
 
         Assert.NotEmpty(accounts);
         Assert.Equal(3, accounts.Count);
