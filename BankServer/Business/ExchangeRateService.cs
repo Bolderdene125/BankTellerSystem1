@@ -1,43 +1,90 @@
-﻿using System.Collections.Concurrent;
-using BankServer.Domain.Models;
+using System.Collections.Concurrent;
+using BankSystem.Shared.Entities;
+using BankSystem.Shared.Interfaces;
 
 namespace BankServer.Business;
 
 /// <summary>
-/// Валютын ханшийг санах ойд хадгалдаг service.
-/// ConcurrentDictionary: нэмэлт lock шаардахгүй, thread-safe.
+/// Валютын ханшийн бизнес логик.
+/// ICurrencyRateRepository interface хэрэгжүүлнэ — Shared гэрээний дагуу.
+/// ConcurrentDictionary: thread-safe, нэмэлт lock шаардахгүй.
 /// </summary>
-public class ExchangeRateService
+public class ExchangeRateService : ICurrencyRateRepository
 {
-    private readonly ConcurrentDictionary<string, ExchangeRate> _rates = new()
+    /// <summary>
+    /// Ханшийн санах ой. Key = валютын код.
+    /// Тест болон demo-д in-memory ашиглана.
+    /// </summary>
+    private readonly ConcurrentDictionary<string, RateEntry> _rates = new()
     {
-        ["USD"] = new ExchangeRate { Currency = "USD", BuyRate = 3440, SellRate = 3460, UpdatedAt = DateTime.Now },
-        ["EUR"] = new ExchangeRate { Currency = "EUR", BuyRate = 3750, SellRate = 3780, UpdatedAt = DateTime.Now },
-        ["CNY"] = new ExchangeRate { Currency = "CNY", BuyRate = 475, SellRate = 480, UpdatedAt = DateTime.Now },
-        ["RUB"] = new ExchangeRate { Currency = "RUB", BuyRate = 38, SellRate = 40, UpdatedAt = DateTime.Now },
+        ["USD"] = new("USD", "Америк доллар", 3440, 3460, DateTime.Now),
+        ["EUR"] = new("EUR", "Евро", 3750, 3780, DateTime.Now),
+        ["CNY"] = new("CNY", "Хятад юань", 475, 480, DateTime.Now),
+        ["RUB"] = new("RUB", "Оросын рубль", 38, 40, DateTime.Now),
     };
 
-    /// <summary>Бүх валютын ханш.</summary>
-    public IEnumerable<ExchangeRate> GetAll() => _rates.Values;
+    /// <summary>Бүх ханш — тест sync хэлбэрээр дуудна.</summary>
+    public IEnumerable<RateEntry> GetAll() => _rates.Values;
 
-    /// <summary>Нэг валютын ханш. Байхгүй бол null.</summary>
-    public ExchangeRate? Get(string currency) =>
-        _rates.TryGetValue(currency, out var rate) ? rate : null;
+    /// <summary>Нэг валютын ханш — тест sync хэлбэрээр дуудна.</summary>
+    public RateEntry? Get(string currency) =>
+        _rates.TryGetValue(currency, out var r) ? r : null;
 
     /// <summary>
-    /// Теллер ханш өөрчлөхөд дуудагдана.
-    /// Шинэчилсний дараа Controller SignalR-ээр Blazor-д мэдэгдэнэ.
+    /// Ханш шинэчилнэ — тест болон Controller дуудна.
+    /// Байхгүй валют бол false буцаана.
     /// </summary>
     public bool Update(string currency, decimal buyRate, decimal sellRate)
     {
         if (!_rates.ContainsKey(currency)) return false;
-        _rates[currency] = new ExchangeRate
-        {
-            Currency = currency,
-            BuyRate = buyRate,
-            SellRate = sellRate,
-            UpdatedAt = DateTime.Now
-        };
+        _rates[currency] = new RateEntry(
+            currency,
+            _rates[currency].CurrencyName,
+            buyRate, sellRate,
+            DateTime.Now);
         return true;
     }
+
+    // ── ICurrencyRateRepository хэрэгжүүлэлт (Shared гэрээ) ─────────────
+
+    /// <summary>Бүх ханш async — ICurrencyRateRepository гэрээ.</summary>
+    public Task<IEnumerable<currencyRate>> GetAllAsync()
+    {
+        var result = _rates.Values.Select(r => ToCurrencyRate(r));
+        return Task.FromResult(result);
+    }
+
+    /// <summary>Кодоор хайна — ICurrencyRateRepository гэрээ.</summary>
+    public Task<currencyRate?> GetByCurrencyCodeAsync(string currencyCode)
+    {
+        var r = Get(currencyCode);
+        return Task.FromResult(r is null ? null : (currencyRate?)ToCurrencyRate(r));
+    }
+
+    /// <summary>Ханш шинэчилнэ — ICurrencyRateRepository гэрээ.</summary>
+    public Task UpdateAsync(currencyRate rate)
+    {
+        Update(rate.CurrencyCode, rate.BuyRate, rate.SellRate);
+        return Task.CompletedTask;
+    }
+
+    private static currencyRate ToCurrencyRate(RateEntry r) => new()
+    {
+        CurrencyCode = r.Currency,
+        CurrencyName = r.CurrencyName,
+        BuyRate = r.BuyRate,
+        SellRate = r.SellRate,
+        UpdatedAt = r.UpdatedAt
+    };
 }
+
+/// <summary>
+/// Ханшийн дотоод загвар — tест гэрээний дагуу:
+/// Currency, CurrencyName, BuyRate, SellRate, UpdatedAt талбартай.
+/// </summary>
+public record RateEntry(
+    string Currency,
+    string CurrencyName,
+    decimal BuyRate,
+    decimal SellRate,
+    DateTime UpdatedAt);

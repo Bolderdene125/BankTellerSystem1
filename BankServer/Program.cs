@@ -1,5 +1,6 @@
 using BankServer.Business;
 using BankServer.Hubs;
+using BankSystem.Shared.Interfaces;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,18 +10,24 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 builder.Services.AddSignalR();
 
-// Business давхаргын service-ууд
-builder.Services.AddSingleton<TicketQueueService>();
+// ── Singleton services — серверийн турш нэг instance ────────────────────
+// AccountService болон ExchangeRateService in-memory тул Singleton
 builder.Services.AddSingleton<AccountService>();
+builder.Services.AddSingleton<IBankAccountRepository>(
+    sp => sp.GetRequiredService<AccountService>());
+
 builder.Services.AddSingleton<ExchangeRateService>();
+builder.Services.AddSingleton<ICurrencyRateRepository>(
+    sp => sp.GetRequiredService<ExchangeRateService>());
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-});
+builder.Services.AddSingleton<TicketQueueService>();
 
-// Local: localhost:5000 | Network: 0.0.0.0:5000
+// ── CORS — TellerApp, Blazor бүгд хандаж чадна ──────────────────────────
+builder.Services.AddCors(o =>
+    o.AddDefaultPolicy(p =>
+        p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
+// Сүлжээнд хүртээмжтэй байхын тулд 0.0.0.0 ашиглана
 builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
 var app = builder.Build();

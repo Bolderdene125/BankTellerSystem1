@@ -54,6 +54,16 @@
             "related": ".xml"
           }
         }
+      },
+      "BankSystem.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/BankSystem.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/BankSystem.Shared.dll": {}
+        }
       }
     }
   },
@@ -143,10 +153,16 @@
         "microsoft.aspnetcore.signalr.client.core.10.0.8.nupkg.sha512",
         "microsoft.aspnetcore.signalr.client.core.nuspec"
       ]
+    },
+    "BankSystem.Shared/1.0.0": {
+      "type": "project",
+      "path": "../BankSystem.Shared/BankSystem.Shared.csproj",
+      "msbuildProject": "../BankSystem.Shared/BankSystem.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net10.0": [
+      "BankSystem.Shared >= 1.0.0",
       "Microsoft.AspNetCore.App.Internal.Assets >= 10.0.8",
       "Microsoft.AspNetCore.SignalR.Client >= 10.0.8"
     ]
@@ -183,7 +199,11 @@
         "net10.0": {
           "framework": "net10.0",
           "targetAlias": "net10.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\BankSystem.Shared.csproj": {
+              "projectPath": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\BankSystem.Shared.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

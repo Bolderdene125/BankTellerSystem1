@@ -1,61 +1,73 @@
-﻿using BankServer.Domain.Models;
+using BankSystem.Shared.Entities;
+using BankSystem.Shared.Interfaces;
 
 namespace BankServer.Business;
 
 /// <summary>
-/// А данснаас Б данс руу мөнгө шилжүүлэх логик.
-/// Данс тус бүрт тусдаа lock — race condition-оос хамгаална.
+/// Банкны дансны бизнес логик.
+/// IBankAccountRepository interface хэрэгжүүлнэ — Shared гэрээний дагуу.
+/// In-memory хадгалалт: тест болон demo-д тохиромжтой.
 /// </summary>
-public class AccountService
+public class AccountService : IBankAccountRepository
 {
     /// <summary>
-    /// Дансны мэдээллийн санах ой. Key = дансны дугаар.
-    /// Жинхэнэ проектод SQL Server + Entity Framework орлоно.
+    /// Дансны санах ой. Key = дансны дугаар.
+    /// Нэг дансны загвар: AccountNumber, OwnerName, MNT, USD.
     /// </summary>
-    private readonly Dictionary<string, BankAccount> _accounts = new()
+    private readonly Dictionary<string, AccountEntry> _accounts = new()
     {
-        ["ACC001"] = new BankAccount { AccountNumber = "ACC001", OwnerName = "Болд", MNT = 1_000_000, USD = 100 },
-        ["ACC002"] = new BankAccount { AccountNumber = "ACC002", OwnerName = "Сарнай", MNT = 500_000, USD = 50 },
-        ["ACC003"] = new BankAccount { AccountNumber = "ACC003", OwnerName = "Ганбаяр", MNT = 2_000_000, USD = 200 },
+        ["ACC001"] = new("ACC001", "Болд", 1_000_000, 100),
+        ["ACC002"] = new("ACC002", "Сарнай", 500_000, 50),
+        ["ACC003"] = new("ACC003", "Ганбаяр", 2_000_000, 200),
     };
 
-    /// <summary>Данс тус бүрийн lock. Нэг дансны гүйлгээ нөгөөг саатуулахгүй.</summary>
-    private readonly Dictionary<string, SemaphoreSlim> _accountLocks = new();
+    /// <summary>
+    /// Данс тус бүрийн async lock.
+    /// Deadlock-аас сэргийлж дансны дугаарын эрэмбээр авна.
+    /// </summary>
+    private readonly Dictionary<string, SemaphoreSlim> _locks = new();
     private readonly object _lockGuard = new();
 
-    private SemaphoreSlim GetOrCreateLock(string accountNumber)
+    private SemaphoreSlim GetLock(string acc)
     {
         lock (_lockGuard)
         {
-            if (!_accountLocks.TryGetValue(accountNumber, out var sem))
-            {
-                sem = new SemaphoreSlim(1, 1);
-                _accountLocks[accountNumber] = sem;
-            }
-            return sem;
+            if (!_locks.TryGetValue(acc, out var s))
+                _locks[acc] = s = new SemaphoreSlim(1, 1);
+            return s;
         }
     }
 
     /// <summary>
-    /// Мөнгө шилжүүлнэ. Deadlock-оос сэргийлж lock-уудыг
-    /// дансны дугаарын string эрэмбээр авна.
+    /// А данснаас Б данс руу мөнгө шилжүүлнэ.
+    /// Бүх алдааны тохиолдлыг шалгана:
+    ///   — Дүн 0 буюу сөрөг
+    ///   — Хоосон дансны дугаар
+    ///   — Ижил данс
+    ///   — Данс олдохгүй
+    ///   — Үлдэгдэл хүрэлцэхгүй
     /// </summary>
     public async Task<(bool Success, string Message)> TransferAsync(
-    string fromAccount, string toAccount, decimal amount)
+        string fromAccount, string toAccount, decimal amount)
     {
-        // ЭНД НЭМНЭ
         if (amount <= 0)
             return (false, "Дүн 0-ээс их байх ёстой");
 
+        if (string.IsNullOrWhiteSpace(fromAccount))
+            return (false, "Илгээгч дансны дугаар хоосон байж болохгүй");
+
+        if (string.IsNullOrWhiteSpace(toAccount))
+            return (false, "Хүлээн авагч дансны дугаар хоосон байж болохгүй");
+
+        if (fromAccount.Equals(toAccount, StringComparison.OrdinalIgnoreCase))
+            return (false, "Илгээгч болон хүлээн авагч данс ижил байж болохгүй");
+
+        // Deadlock-аас сэргийлж эрэмбээр lock авна
         var (first, second) = string.Compare(fromAccount, toAccount) < 0
-            ? (fromAccount, toAccount)
-            : (toAccount, fromAccount);
+            ? (fromAccount, toAccount) : (toAccount, fromAccount);
 
-        var lock1 = GetOrCreateLock(first);
-        var lock2 = GetOrCreateLock(second);
-
-        await lock1.WaitAsync();
-        await lock2.WaitAsync();
+        await GetLock(first).WaitAsync();
+        await GetLock(second).WaitAsync();
         try
         {
             if (!_accounts.TryGetValue(fromAccount, out var from))
@@ -65,24 +77,74 @@ public class AccountService
                 return (false, $"'{toAccount}' данс олдсонгүй");
 
             if (from.MNT < amount)
-                return (false, $"Үлдэгдэл хүрэлцэхгүй ({from.MNT:N0}₮ < {amount:N0}₮)");
+                return (false,
+                    $"Үлдэгдэл хүрэлцэхгүй ({from.MNT:N0}₮ < {amount:N0}₮)");
 
             from.MNT -= amount;
             to.MNT += amount;
 
-            return (true, $"{amount:N0}₮ амжилттай: {from.OwnerName} → {to.OwnerName}");
+            return (true,
+                $"{amount:N0}₮ амжилттай: {from.OwnerName} → {to.OwnerName}. " +
+                $"Үлдэгдэл: {from.MNT:N0}₮");
         }
         finally
         {
-            lock2.Release();
-            lock1.Release();
+            GetLock(second).Release();
+            GetLock(first).Release();
         }
     }
 
-    /// <summary>Нэг дансны мэдээлэл. Байхгүй бол null.</summary>
-    public BankAccount? GetAccount(string accountNumber) =>
-        _accounts.TryGetValue(accountNumber, out var acc) ? acc : null;
+    /// <summary>
+    /// Нэг дансны мэдээлэл — тест sync хэлбэрээр дуудна.
+    /// AccountEntry: AccountNumber, OwnerName, MNT, USD талбартай.
+    /// </summary>
+    public AccountEntry? GetAccount(string accountNumber) =>
+        _accounts.TryGetValue(accountNumber, out var a) ? a : null;
 
-    /// <summary>Бүх дансны жагсаалт.</summary>
-    public IEnumerable<BankAccount> GetAllAccounts() => _accounts.Values;
+    /// <summary>Бүх дансны жагсаалт — тест sync хэлбэрээр дуудна.</summary>
+    public IEnumerable<AccountEntry> GetAllAccounts() => _accounts.Values;
+
+    // ── IBankAccountRepository хэрэгжүүлэлт (Shared гэрээ) ──────────────
+
+    /// <summary>Дансны дугаараар Shared.BankAccount буцаана — interface гэрээ.</summary>
+    public Task<BankAccount?> GetByAccountNumberAsync(string accountNumber)
+    {
+        if (!_accounts.TryGetValue(accountNumber, out var a))
+            return Task.FromResult<BankAccount?>(null);
+        return Task.FromResult<BankAccount?>(new BankAccount
+        {
+            AccountNumber = a.AccountNumber,
+            OwnerName = a.OwnerName,
+            Currency = "MNT",
+            Balance = a.MNT,
+            IsActive = true
+        });
+    }
+
+    /// <summary>ID-аар хайна — IBankAccountRepository гэрээ.</summary>
+    public Task<BankAccount?> GetByIdAsync(int id) =>
+        Task.FromResult<BankAccount?>(null);
+
+    /// <summary>Данс шинэчилнэ — IBankAccountRepository гэрээ.</summary>
+    public Task UpdateAsync(BankAccount account) => Task.CompletedTask;
+}
+
+/// <summary>
+/// Нэг харилцагчийн дансны загвар.
+/// AccountNumber, OwnerName, MNT, USD — тест гэрээний дагуу.
+/// </summary>
+public class AccountEntry
+{
+    public string AccountNumber { get; }
+    public string OwnerName { get; }
+    public decimal MNT { get; set; }
+    public decimal USD { get; set; }
+
+    public AccountEntry(string num, string name, decimal mnt, decimal usd)
+    {
+        AccountNumber = num;
+        OwnerName = name;
+        MNT = mnt;
+        USD = usd;
+    }
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NumberTerminal")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c1e6d22f212f267d52e41f2cbd02da7bbe4eeeb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+763a53beda308f5ab11625e3e8af71fcef4ce89f")]
 [assembly: System.Reflection.AssemblyProductAttribute("NumberTerminal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NumberTerminal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
