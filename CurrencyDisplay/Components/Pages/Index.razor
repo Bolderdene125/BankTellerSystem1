@@ -22,15 +22,18 @@
 
 @if (_rates.Count == 0)
 {
-    <p style="text-align:center">Ачааллаж байна...</p>
+    <p style="text-align:center; color:gray; margin-top:40px">
+        Ачааллаж байна...
+    </p>
 }
 else
 {
-    <table style="width:100%; max-width:700px; margin:0 auto;
-        border-collapse:collapse; font-size:1.3rem;">
+    <table style="width:100%; max-width:800px; margin:0 auto;
+        border-collapse:collapse; font-size:1.2rem;">
         <thead>
             <tr style="background:#005a9e; color:white;">
                 <th style="padding:14px; text-align:left">Валют</th>
+                <th style="padding:14px; text-align:left">Нэр</th>
                 <th style="padding:14px; text-align:right">Авах (₮)</th>
                 <th style="padding:14px; text-align:right">Зарах (₮)</th>
                 <th style="padding:14px; text-align:right">Цаг</th>
@@ -40,14 +43,18 @@ else
             @foreach (var rate in _rates.Values)
             {
                 <tr style="border-bottom:1px solid #ddd;
-                    background:@(rate.IsNew ? "#fffde7" : "white")">
+                    background:@(rate.IsNew ? "#fffde7" : "white");
+                    transition: background 0.5s;">
                     <td style="padding:14px; font-weight:bold; font-size:1.5rem">
-                        @GetFlag(rate.Currency) @rate.Currency
+                        @GetFlag(rate.CurrencyCode) @rate.CurrencyCode
                     </td>
-                    <td style="padding:14px; text-align:right; color:#cc3300">
+                    <td style="padding:14px; color:#555">
+                        @rate.CurrencyName
+                    </td>
+                    <td style="padding:14px; text-align:right; color:#cc3300; font-weight:bold">
                         @rate.BuyRate.ToString("N0")
                     </td>
-                    <td style="padding:14px; text-align:right; color:#006600">
+                    <td style="padding:14px; text-align:right; color:#006600; font-weight:bold">
                         @rate.SellRate.ToString("N0")
                     </td>
                     <td style="padding:14px; text-align:right;
@@ -78,14 +85,15 @@ else
         try
         {
             using var http = new HttpClient();
-            var rates = await http.GetFromJsonAsync<List<ExchangeRate>>(
+            var rates = await http.GetFromJsonAsync<List<ExchangeRateDto>>(
                 $"{ServerConfig.Url}/api/exchangerate");
 
             if (rates is null) return;
 
             foreach (var r in rates)
-                _rates[r.Currency] = new RateView(
-                    r.Currency, r.BuyRate, r.SellRate, r.UpdatedAt, false);
+                _rates[r.CurrencyCode] = new RateView(
+                    r.CurrencyCode, r.CurrencyName,
+                    r.BuyRate, r.SellRate, r.UpdatedAt, false);
         }
         catch (Exception ex)
         {
@@ -107,10 +115,11 @@ else
                 .WithAutomaticReconnect()
                 .Build();
 
-            _hub.On<ExchangeRate>("ReceiveRateUpdate", rate =>
+            _hub.On<ExchangeRateDto>("ReceiveRateUpdate", rate =>
             {
-                _rates[rate.Currency] = new RateView(
-                    rate.Currency, rate.BuyRate, rate.SellRate,
+                _rates[rate.CurrencyCode] = new RateView(
+                    rate.CurrencyCode, rate.CurrencyName,
+                    rate.BuyRate, rate.SellRate,
                     rate.UpdatedAt, IsNew: true);
                 _lastUpdated = DateTime.Now;
                 InvokeAsync(StateHasChanged);
@@ -126,7 +135,7 @@ else
         }
     }
 
-    private static string GetFlag(string currency) => currency switch
+    private static string GetFlag(string code) => code switch
     {
         "USD" => "🇺🇸",
         "EUR" => "🇪🇺",
@@ -142,9 +151,24 @@ else
             await _hub.DisposeAsync();
     }
 
-    record RateView(string Currency, decimal BuyRate, decimal SellRate,
-                    DateTime UpdatedAt, bool IsNew);
+    /// <summary>
+    /// ExchangeRateController-аас ирэх DTO.
+    /// CurrencyCode + CurrencyName — teammate-ийн бүтэц.
+    /// </summary>
+    record ExchangeRateDto(
+        string CurrencyCode,
+        string CurrencyName,
+        decimal BuyRate,
+        decimal SellRate,
+        DateTime UpdatedAt
+    );
 
-    record ExchangeRate(string Currency, decimal BuyRate, decimal SellRate,
-                        DateTime UpdatedAt);
+    record RateView(
+        string CurrencyCode,
+        string CurrencyName,
+        decimal BuyRate,
+        decimal SellRate,
+        DateTime UpdatedAt,
+        bool IsNew
+    );
 }

@@ -1,18 +1,17 @@
 {
   "version": 2,
-  "dgSpecHash": "FsWv3aSY98U=",
+  "dgSpecHash": "YsPYZk9VfLA=",
   "success": true,
   "projectFilePath": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\TellerApp.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.configuration\\10.0.8\\microsoft.extensions.configuration.10.0.8.nupkg.sha512",
-    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\10.0.8\\microsoft.extensions.configuration.abstractions.10.0.8.nupkg.sha512",
-    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.configuration.binder\\10.0.8\\microsoft.extensions.configuration.binder.10.0.8.nupkg.sha512",
-    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.configuration.fileextensions\\10.0.8\\microsoft.extensions.configuration.fileextensions.10.0.8.nupkg.sha512",
-    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.configuration.json\\10.0.8\\microsoft.extensions.configuration.json.10.0.8.nupkg.sha512",
-    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\10.0.8\\microsoft.extensions.fileproviders.abstractions.10.0.8.nupkg.sha512",
-    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.fileproviders.physical\\10.0.8\\microsoft.extensions.fileproviders.physical.10.0.8.nupkg.sha512",
-    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\10.0.8\\microsoft.extensions.filesystemglobbing.10.0.8.nupkg.sha512",
-    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.primitives\\10.0.8\\microsoft.extensions.primitives.10.0.8.nupkg.sha512"
+    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.configuration\\10.0.0\\microsoft.extensions.configuration.10.0.0.nupkg.sha512",
+    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\10.0.0\\microsoft.extensions.configuration.abstractions.10.0.0.nupkg.sha512",
+    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.configuration.fileextensions\\10.0.0\\microsoft.extensions.configuration.fileextensions.10.0.0.nupkg.sha512",
+    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.configuration.json\\10.0.0\\microsoft.extensions.configuration.json.10.0.0.nupkg.sha512",
+    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\10.0.0\\microsoft.extensions.fileproviders.abstractions.10.0.0.nupkg.sha512",
+    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.fileproviders.physical\\10.0.0\\microsoft.extensions.fileproviders.physical.10.0.0.nupkg.sha512",
+    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\10.0.0\\microsoft.extensions.filesystemglobbing.10.0.0.nupkg.sha512",
+    "C:\\Users\\ADOLBOOK\\.nuget\\packages\\microsoft.extensions.primitives\\10.0.0\\microsoft.extensions.primitives.10.0.0.nupkg.sha512"
   ],
   "logs": []
 }

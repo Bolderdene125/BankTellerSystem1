@@ -1,36 +1,50 @@
 ﻿using BankServer.Business;
+using BankServer.Data;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace BankTests;
 
-/// <summary>ExchangeRateService-ийн CRUD тестүүд.</summary>
+/// <summary>
+/// ExchangeRateService-ийн тестүүд.
+/// InMemory database ашигладаг.
+/// </summary>
 public class ExchangeRateServiceTests
 {
-    private ExchangeRateService NewService() => new();
+    /// <summary>Тест бүрт тусдаа InMemory database үүсгэнэ.</summary>
+    private static ExchangeRateService NewService()
+    {
+        var options = new DbContextOptionsBuilder<BankDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        var db = new BankDbContext(options);
+        db.Database.EnsureCreated();
+        return new ExchangeRateService(db);
+    }
 
     /// <summary>Анхны ханш дүүргэгдсэн байгааг шалгана.</summary>
     [Fact]
-    public void GetAll_ReturnsInitialRates()
+    public async Task GetAll_ReturnsInitialRates()
     {
-        var rates = NewService().GetAll().ToList();
+        var rates = (await NewService().GetAllAsync()).ToList();
         Assert.NotEmpty(rates);
         Assert.Contains(rates, r => r.Currency == "USD");
     }
 
     /// <summary>4 валют байгааг шалгана.</summary>
     [Fact]
-    public void GetAll_ReturnsFourCurrencies()
+    public async Task GetAll_ReturnsFourCurrencies()
     {
-        var rates = NewService().GetAll().ToList();
+        var rates = (await NewService().GetAllAsync()).ToList();
         Assert.Equal(4, rates.Count);
     }
 
     /// <summary>Байгаа валютын ханш авахад null биш байх ёстой.</summary>
     [Fact]
-    public void Get_ExistingCurrency_ReturnsRate()
+    public async Task Get_ExistingCurrency_ReturnsRate()
     {
         var svc = NewService();
-        var rate = svc.Get("USD");
+        var rate = await svc.GetAsync("USD");
 
         Assert.NotNull(rate);
         Assert.Equal("USD", rate.Currency);
@@ -38,47 +52,48 @@ public class ExchangeRateServiceTests
 
     /// <summary>Байхгүй валют хайхад null буцаана.</summary>
     [Fact]
-    public void Get_NonExistentCurrency_ReturnsNull()
+    public async Task Get_NonExistentCurrency_ReturnsNull()
     {
-        Assert.Null(NewService().Get("XYZ"));
+        Assert.Null(await NewService().GetAsync("XYZ"));
     }
 
     /// <summary>Ханш шинэчлэгдсэний дараа шинэ утга буцааж байгааг шалгана.</summary>
     [Fact]
-    public void Update_ValidCurrency_UpdatesRate()
+    public async Task Update_ValidCurrency_UpdatesRate()
     {
         var svc = NewService();
-        svc.Update("USD", 3500, 3520);
+        await svc.UpdateAsync("USD", 3500, 3520);
 
-        Assert.Equal(3500, svc.Get("USD")!.BuyRate);
-        Assert.Equal(3520, svc.Get("USD")!.SellRate);
+        var rate = await svc.GetAsync("USD");
+        Assert.Equal(3500, rate!.BuyRate);
+        Assert.Equal(3520, rate.SellRate);
     }
 
     /// <summary>Байхгүй валют шинэчлэхэд false буцаах ёстой.</summary>
     [Fact]
-    public void Update_InvalidCurrency_ReturnsFalse()
+    public async Task Update_InvalidCurrency_ReturnsFalse()
     {
-        Assert.False(NewService().Update("XYZ", 100, 110));
+        Assert.False(await NewService().UpdateAsync("XYZ", 100, 110));
     }
 
     /// <summary>Ханш шинэчлэгдсэний дараа UpdatedAt өөрчлөгдөх ёстой.</summary>
     [Fact]
-    public void Update_ValidCurrency_UpdatesTimestamp()
+    public async Task Update_ValidCurrency_UpdatesTimestamp()
     {
         var svc = NewService();
-        var before = svc.Get("USD")!.UpdatedAt;
+        var before = (await svc.GetAsync("USD"))!.UpdatedAt;
 
-        Thread.Sleep(10);
-        svc.Update("USD", 3500, 3520);
+        await Task.Delay(10);
+        await svc.UpdateAsync("USD", 3500, 3520);
 
-        Assert.True(svc.Get("USD")!.UpdatedAt > before);
+        Assert.True((await svc.GetAsync("USD"))!.UpdatedAt > before);
     }
 
     /// <summary>SellRate нь BuyRate-ээс их байгааг шалгана.</summary>
     [Fact]
-    public void GetAll_SellRateHigherThanBuyRate()
+    public async Task GetAll_SellRateHigherThanBuyRate()
     {
-        var rates = NewService().GetAll();
+        var rates = await NewService().GetAllAsync();
         foreach (var rate in rates)
             Assert.True(rate.SellRate > rate.BuyRate,
                 $"{rate.Currency}: SellRate ({rate.SellRate}) BuyRate ({rate.BuyRate})-аас их байх ёстой");

@@ -11,10 +11,6 @@
         "Action": "Start"
       },
       {
-        "Path": "TellerApp\\TellerApp.csproj",
-        "Action": "Start"
-      },
-      {
         "Path": "CurrencyDisplay\\CurrencyDisplay.csproj",
         "Action": "Start"
       }

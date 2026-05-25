@@ -1,88 +1,135 @@
-﻿using BankServer.Domain.Models;
+﻿using BankServer.Data;
+using BankSystem.Shared.Entities;
+using BankSystem.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BankServer.Business;
 
 /// <summary>
-/// А данснаас Б данс руу мөнгө шилжүүлэх логик.
-/// Данс тус бүрт тусдаа lock — race condition-оос хамгаална.
+/// IBankAccountRepository interface-г хэрэгжүүлнэ.
+/// Гүйлгээний бизнес логик болон данс хайх үйлдлүүд энд байна.
 /// </summary>
-public class AccountService
+public class AccountService(BankDbContext db) : IBankAccountRepository
 {
     /// <summary>
-    /// Дансны мэдээллийн санах ой. Key = дансны дугаар.
-    /// Жинхэнэ проектод SQL Server + Entity Framework орлоно.
+    /// async/await дотор lock{} ажиллахгүй тул SemaphoreSlim ашиглана.
+    /// Нэгэн зэрэг хоёр гүйлгээ ирэхэд баланс давхар хасагдахаас сэргийлнэ.
     /// </summary>
-    private readonly Dictionary<string, BankAccount> _accounts = new()
-    {
-        ["ACC001"] = new BankAccount { AccountNumber = "ACC001", OwnerName = "Болд", MNT = 1_000_000, USD = 100 },
-        ["ACC002"] = new BankAccount { AccountNumber = "ACC002", OwnerName = "Сарнай", MNT = 500_000, USD = 50 },
-        ["ACC003"] = new BankAccount { AccountNumber = "ACC003", OwnerName = "Ганбаяр", MNT = 2_000_000, USD = 200 },
-    };
-
-    /// <summary>Данс тус бүрийн lock. Нэг дансны гүйлгээ нөгөөг саатуулахгүй.</summary>
-    private readonly Dictionary<string, SemaphoreSlim> _accountLocks = new();
-    private readonly object _lockGuard = new();
-
-    private SemaphoreSlim GetOrCreateLock(string accountNumber)
-    {
-        lock (_lockGuard)
-        {
-            if (!_accountLocks.TryGetValue(accountNumber, out var sem))
-            {
-                sem = new SemaphoreSlim(1, 1);
-                _accountLocks[accountNumber] = sem;
-            }
-            return sem;
-        }
-    }
+    private static readonly SemaphoreSlim _lock = new(1, 1);
 
     /// <summary>
-    /// Мөнгө шилжүүлнэ. Deadlock-оос сэргийлж lock-уудыг
-    /// дансны дугаарын string эрэмбээр авна.
+    /// А данснаас Б данс руу мөнгө шилжүүлнэ.
+    /// Клиент болон сервер хоёр талд validation хийдэг — давхар шалгалт.
     /// </summary>
     public async Task<(bool Success, string Message)> TransferAsync(
-    string fromAccount, string toAccount, decimal amount)
+        string fromAccount, string toAccount, decimal amount)
     {
-        // ЭНД НЭМНЭ
         if (amount <= 0)
             return (false, "Дүн 0-ээс их байх ёстой");
 
-        var (first, second) = string.Compare(fromAccount, toAccount) < 0
-            ? (fromAccount, toAccount)
-            : (toAccount, fromAccount);
+        if (string.IsNullOrWhiteSpace(fromAccount))
+            return (false, "Илгээгч дансны дугаар хоосон байж болохгүй");
 
-        var lock1 = GetOrCreateLock(first);
-        var lock2 = GetOrCreateLock(second);
+        if (string.IsNullOrWhiteSpace(toAccount))
+            return (false, "Хүлээн авагч дансны дугаар хоосон байж болохгүй");
 
-        await lock1.WaitAsync();
-        await lock2.WaitAsync();
+        if (fromAccount.Equals(toAccount, StringComparison.OrdinalIgnoreCase))
+            return (false, "Илгээгч болон хүлээн авагч данс ижил байж болохгүй");
+
+        await _lock.WaitAsync();
         try
         {
-            if (!_accounts.TryGetValue(fromAccount, out var from))
-                return (false, $"'{fromAccount}' данс олдсонгүй");
+            var from = await db.Accounts
+                .FirstOrDefaultAsync(a => a.AccountNumber == fromAccount && a.IsActive);
+            if (from is null)
+                return (false, $"'{fromAccount}' илгээгч данс олдсонгүй");
 
-            if (!_accounts.TryGetValue(toAccount, out var to))
-                return (false, $"'{toAccount}' данс олдсонгүй");
+            var to = await db.Accounts
+                .FirstOrDefaultAsync(a => a.AccountNumber == toAccount && a.IsActive);
+            if (to is null)
+                return (false, $"'{toAccount}' хүлээн авагч данс олдсонгүй");
 
-            if (from.MNT < amount)
-                return (false, $"Үлдэгдэл хүрэлцэхгүй ({from.MNT:N0}₮ < {amount:N0}₮)");
+            if (from.Currency != to.Currency)
+                return (false, $"Валют тохирохгүй: {from.Currency} → {to.Currency}");
 
-            from.MNT -= amount;
-            to.MNT += amount;
+            if (from.Balance < amount)
+                return (false,
+                    $"Үлдэгдэл хүрэлцэхгүй ({from.Balance:N0} {from.Currency} < {amount:N0})");
 
-            return (true, $"{amount:N0}₮ амжилттай: {from.OwnerName} → {to.OwnerName}");
+            from.Balance -= amount;
+            to.Balance += amount;
+
+            await db.SaveChangesAsync();
+
+            return (true,
+                $"{amount:N0} {from.Currency} амжилттай: " +
+                $"{from.OwnerName} → {to.OwnerName}. Үлдэгдэл: {from.Balance:N0}");
         }
         finally
         {
-            lock2.Release();
-            lock1.Release();
+            _lock.Release();
         }
     }
 
-    /// <summary>Нэг дансны мэдээлэл. Байхгүй бол null.</summary>
-    public BankAccount? GetAccount(string accountNumber) =>
-        _accounts.TryGetValue(accountNumber, out var acc) ? acc : null;
+    /// <summary>
+    /// Дансны дугаараар данс хайна — тестэд ашиглагдана.
+    /// AccountNumber-ын эхний хэсгээр (ACC001) хайх боломжтой.
+    /// </summary>
+    public async Task<AccountView?> GetAccountAsync(string accountNumber)
+    {
+        // ACC001 хэлбэрээр хайхад ACC001-MNT, ACC001-USD хоёуланг нэгтгэж буцаана
+        var accounts = await db.Accounts
+            .Where(a => a.AccountNumber.StartsWith(accountNumber) && a.IsActive)
+            .ToListAsync();
 
-    /// <summary>Бүх дансны жагсаалт.</summary>
-    public IEnumerable<BankAccount> GetAllAccounts() => _accounts.Values;
+        if (!accounts.Any()) return null;
+
+        return new AccountView
+        {
+            AccountNumber = accountNumber,
+            OwnerName = accounts.First().OwnerName,
+            MNT = accounts.FirstOrDefault(a => a.Currency == "MNT")?.Balance ?? 0,
+            USD = accounts.FirstOrDefault(a => a.Currency == "USD")?.Balance ?? 0
+        };
+    }
+
+    /// <summary>Идэвхтэй дансны жагсаалт — AccountController дуудна.</summary>
+    public async Task<IEnumerable<BankAccount>> GetAllAccountsAsync() =>
+        await db.Accounts.Where(a => a.IsActive).ToListAsync();
+
+    // ── IBankAccountRepository хэрэгжүүлэлт ─────────────────────────────
+
+    /// <summary>Дансны дугаараар хайна — IBankAccountRepository гэрээ.</summary>
+    public async Task<BankAccount?> GetByAccountNumberAsync(string accountNumber) =>
+        await db.Accounts.FirstOrDefaultAsync(a => a.AccountNumber == accountNumber);
+
+    /// <summary>ID-аар хайна — IBankAccountRepository гэрээ.</summary>
+    public async Task<BankAccount?> GetByIdAsync(int id) =>
+        await db.Accounts.FindAsync(id);
+
+    /// <summary>Данс шинэчилнэ — IBankAccountRepository гэрээ.</summary>
+    public async Task UpdateAsync(BankAccount account)
+    {
+        db.Accounts.Update(account);
+        await db.SaveChangesAsync();
+    }
+}
+
+/// <summary>
+/// Нэг харилцагчийн бүх дансны нэгтгэл — тестэд ашиглагдана.
+/// ACC001-MNT болон ACC001-USD-г нэг объектод нэгтгэнэ.
+/// </summary>
+public class AccountView
+{
+    /// <summary>Дансны үндсэн дугаар (жишээ: ACC001)</summary>
+    public string AccountNumber { get; set; } = string.Empty;
+
+    /// <summary>Эзэмшигчийн нэр</summary>
+    public string OwnerName { get; set; } = string.Empty;
+
+    /// <summary>МНТ үлдэгдэл</summary>
+    public decimal MNT { get; set; }
+
+    /// <summary>USD үлдэгдэл</summary>
+    public decimal USD { get; set; }
 }
