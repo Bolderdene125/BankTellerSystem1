@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="BankDll/BankDll.csproj" Id="55005c0d-edae-4d83-872f-bb2a7df88efe" />
   <Project Path="BankServer/BankServer.csproj" />
   <Project Path="BankTests/BankTests.csproj" />
   <Project Path="CurrencyDisplay/CurrencyDisplay.csproj" Id="3068d7da-c175-4d8e-a826-1f4e2b36de1a" />

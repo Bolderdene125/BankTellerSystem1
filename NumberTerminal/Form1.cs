@@ -1,16 +1,28 @@
 using System.Net.Http.Json;
+using System.Drawing.Printing;
+using Microsoft.Extensions.Configuration;
 
 namespace NumberTerminal;
 
 /// <summary>
-/// Зочин товч дарахад BankServer-ээс дугаар авч харуулна.
-/// Жинхэнэ тохиолдолд авсан дугаарыг POS printer-т явуулна.
+/// Банкны үүдэнд байдаг дугаар авах терминал.
+/// Зочин товч дарахад сервераас дугаар авч WinForm дотор харуулна.
+/// Print товч дарахад тасалбар хэвлэнэ.
 /// </summary>
 public partial class Form1 : Form
 {
-    // HttpClient: програм дотор нэг л instance байх хэрэгтэй (static)
     private static readonly HttpClient _http = new();
-    private const string ServerUrl = "http://localhost:5000";
+
+    // appsettings.json-оос URL авна — IP өөрчлөхөд код засахгүй
+    private static readonly string ServerUrl =
+        new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: true)
+            .Build()["ServerUrl"] ?? "http://localhost:5000";
+
+    // Хамгийн сүүлд авсан тасалбарын мэдээлэл — print-д хэрэгтэй
+    private int _lastNumber = 0;
+    private DateTime _lastIssuedAt = DateTime.Now;
+    private int _lastQueueCount = 0;
 
     public Form1()
     {
@@ -18,135 +30,273 @@ public partial class Form1 : Form
         SetupUI();
     }
 
-    /// <summary>Form-ийн UI-г кодоор байгуулна.</summary>
     private void SetupUI()
     {
         Text = "Банкны Тикетийн Терминал";
-        Size = new Size(500, 420);
+        Size = new Size(480, 520);
         BackColor = Color.FromArgb(240, 248, 255);
         StartPosition = FormStartPosition.CenterScreen;
+        FormBorderStyle = FormBorderStyle.FixedSingle;
+        MaximizeBox = false;
 
+        // Банкны нэр
         var lblTitle = new Label
         {
             Text = "🏦 ХААН БАНК",
-            Font = new Font("Segoe UI", 18, FontStyle.Bold),
+            Font = new Font("Segoe UI", 20, FontStyle.Bold),
             TextAlign = ContentAlignment.MiddleCenter,
             ForeColor = Color.FromArgb(0, 102, 204),
-            Location = new Point(50, 20),
-            Size = new Size(400, 50)
+            Location = new Point(0, 20),
+            Size = new Size(480, 55)
         };
 
-        // Олгосон дугаарыг том font-оор харуулдаг label
+        // Ялгах зураас
+        var separator = new Label
+        {
+            BorderStyle = BorderStyle.Fixed3D,
+            Location = new Point(30, 80),
+            Size = new Size(420, 2)
+        };
+
+        // "Таны дугаар" гарчиг
+        var lblHeader = new Label
+        {
+            Text = "ТАНЫ ДУГААР",
+            Font = new Font("Segoe UI", 12),
+            TextAlign = ContentAlignment.MiddleCenter,
+            ForeColor = Color.Gray,
+            Location = new Point(0, 95),
+            Size = new Size(480, 30)
+        };
+
+        // Дугаарыг том font-оор харуулдаг label — гол элемент
         var lblNumber = new Label
         {
             Name = "lblNumber",
             Text = "—",
-            Font = new Font("Segoe UI", 72, FontStyle.Bold),
+            Font = new Font("Segoe UI", 96, FontStyle.Bold),
             TextAlign = ContentAlignment.MiddleCenter,
             ForeColor = Color.FromArgb(0, 102, 204),
-            Location = new Point(50, 80),
-            Size = new Size(400, 130)
+            Location = new Point(0, 125),
+            Size = new Size(480, 150)
         };
 
+        // Авсан цаг харуулах
+        var lblTime = new Label
+        {
+            Name = "lblTime",
+            Text = "",
+            Font = new Font("Segoe UI", 13),
+            TextAlign = ContentAlignment.MiddleCenter,
+            ForeColor = Color.FromArgb(80, 80, 80),
+            Location = new Point(0, 280),
+            Size = new Size(480, 30)
+        };
+
+        // Хүлээлтийн тоо
         var lblQueue = new Label
         {
             Name = "lblQueue",
-            Text = "Хүлээлт: —",
-            Font = new Font("Segoe UI", 14),
-            TextAlign = ContentAlignment.MiddleCenter,
-            Location = new Point(100, 215),
-            Size = new Size(300, 30)
-        };
-
-        var cmbService = new ComboBox
-        {
-            Name = "cmbService",
+            Text = "",
             Font = new Font("Segoe UI", 12),
-            Location = new Point(150, 255),
-            Size = new Size(200, 35),
-            DropDownStyle = ComboBoxStyle.DropDownList
+            TextAlign = ContentAlignment.MiddleCenter,
+            ForeColor = Color.Gray,
+            Location = new Point(0, 315),
+            Size = new Size(480, 28)
         };
-        cmbService.Items.AddRange(new[] { "Гүйлгээ", "Лавлагаа", "Зээл", "Карт" });
-        cmbService.SelectedIndex = 0;
 
+        // Дугаар авах товч
         var btnIssue = new Button
         {
             Name = "btnIssue",
-            Text = "🎫 ДУГААР АВАХ",
-            Font = new Font("Segoe UI", 16, FontStyle.Bold),
+            Text = "🎫  ДУГААР АВАХ",
+            Font = new Font("Segoe UI", 15, FontStyle.Bold),
             BackColor = Color.FromArgb(0, 153, 51),
             ForeColor = Color.White,
             FlatStyle = FlatStyle.Flat,
-            Location = new Point(100, 305),
-            Size = new Size(300, 60),
+            Location = new Point(40, 360),
+            Size = new Size(260, 60),
             Cursor = Cursors.Hand
         };
+        btnIssue.FlatAppearance.BorderSize = 0;
         btnIssue.Click += BtnIssue_Click;
 
-        Controls.AddRange(new Control[] { lblTitle, lblNumber, lblQueue, cmbService, btnIssue });
+        // Print товч — дугаар авсны дараа идэвхждэг
+        var btnPrint = new Button
+        {
+            Name = "btnPrint",
+            Text = "🖨  ХЭВЛЭХ",
+            Font = new Font("Segoe UI", 15, FontStyle.Bold),
+            BackColor = Color.FromArgb(0, 102, 204),
+            ForeColor = Color.White,
+            FlatStyle = FlatStyle.Flat,
+            Location = new Point(315, 360),
+            Size = new Size(125, 60),
+            Cursor = Cursors.Hand,
+            Enabled = false  // дугаар авахаас өмнө идэвхгүй
+        };
+        btnPrint.FlatAppearance.BorderSize = 0;
+        btnPrint.Click += BtnPrint_Click;
+
+        // Сервер хаяг харуулах — холбогдсон эсэхийг мэдэхэд хэрэгтэй
+        var lblServer = new Label
+        {
+            Text = $"Сервер: {ServerUrl}",
+            Font = new Font("Segoe UI", 8),
+            TextAlign = ContentAlignment.MiddleCenter,
+            ForeColor = Color.LightGray,
+            Location = new Point(0, 440),
+            Size = new Size(480, 20)
+        };
+
+        Controls.AddRange(new Control[]
+        {
+            lblTitle, separator, lblHeader, lblNumber,
+            lblTime, lblQueue, btnIssue, btnPrint, lblServer
+        });
     }
 
     /// <summary>
-    /// "Дугаар авах" дарахад ажиллана.
-    /// async void: UI event handler-д зөвшөөрөгдөнө, бусад газар хэрэглэхгүй.
+    /// "Дугаар авах" дарахад сервер рүү POST явуулна.
+    /// Зөвхөн "Гүйлгээ" сервис ашиглана — бусад төрөл хэрэггүй.
+    /// async void: UI event handler-д зөвшөөрөгдөнө.
     /// </summary>
     private async void BtnIssue_Click(object? sender, EventArgs e)
     {
-        var btn = (Button)sender!;
-        var cmbService = (ComboBox)Controls["cmbService"]!;
-        var lblNumber = (Label)Controls["lblNumber"]!;
-        var lblQueue = (Label)Controls["lblQueue"]!;
+        var btn = (Button)Controls["btnIssue"]!;
+        var btnPrint = (Button)Controls["btnPrint"]!;
 
-        btn.Enabled = false; // давхар дарахаас сэргийлнэ
+        btn.Enabled = false;
         btn.Text = "Уншиж байна...";
 
         try
         {
-            string serviceType = cmbService.SelectedItem?.ToString() ?? "Гүйлгээ";
-
-            var response = await _http.PostAsync(
-                $"{ServerUrl}/api/ticket/issue?serviceType={Uri.EscapeDataString(serviceType)}",
-                null);
+            // DTO ашиглан хүсэлт явуулна
+            var response = await _http.PostAsJsonAsync(
+                $"{ServerUrl}/api/ticket/issue",
+                new { serviceType = "Гүйлгээ" });
 
             if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadFromJsonAsync<TicketResponse>();
+                var result = await response.Content
+                    .ReadFromJsonAsync<IssueTicketResponseDto>();
+
                 if (result is not null)
                 {
-                    lblNumber.Text = result.Number.ToString("D3"); // 001, 042 гэх мэт
-                    lblQueue.Text = $"Хүлээж байгаа: {result.QueueCount} хүн";
-                    PrintTicket(result.Number, result.IssuedAt, serviceType);
+                    // Дугаарыг санах — print-д хэрэгтэй
+                    _lastNumber = result.Number;
+                    _lastIssuedAt = result.IssuedAt;
+                    _lastQueueCount = result.QueueCount;
+
+                    // WinForm дотор харуулна — popup биш
+                    UpdateDisplay(result.Number, result.IssuedAt, result.QueueCount);
+
+                    // Print товчийг идэвхжүүлнэ
+                    btnPrint.Enabled = true;
                 }
             }
             else
             {
-                MessageBox.Show("Серверт холбогдоход алдаа гарлаа!", "Алдаа",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowError("Сервер хариу өгсөнгүй.");
             }
         }
         catch (HttpRequestException)
         {
-            MessageBox.Show("Сервер ажиллаж байгаа эсэхийг шалгана уу.",
-                "Холболтын алдаа", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            ShowError($"Сервер ({ServerUrl})-т холбогдож чадсангүй.");
         }
         finally
         {
             btn.Enabled = true;
-            btn.Text = "🎫 ДУГААР АВАХ";
+            btn.Text = "🎫  ДУГААР АВАХ";
         }
     }
 
     /// <summary>
-    /// Тасалбар "хэвлэх". Жинхэнэ проектод ESC/POS printer protocol дуудна.
+    /// WinForm дотор дугаарын мэдээллийг шинэчилнэ.
+    /// Popup харуулахгүй — form дотор харагдана.
     /// </summary>
-    private void PrintTicket(int number, DateTime issuedAt, string serviceType)
+    private void UpdateDisplay(int number, DateTime issuedAt, int queueCount)
     {
-        MessageBox.Show(
-            $"Таны дугаар: {number:D3}\nСервис: {serviceType}\nЦаг: {issuedAt:HH:mm}",
-            "Дугаар амжилттай авлаа!",
-            MessageBoxButtons.OK, MessageBoxIcon.Information);
+        ((Label)Controls["lblNumber"]!).Text = number.ToString("D3");
+        ((Label)Controls["lblTime"]!).Text = $"Цаг: {issuedAt:HH:mm}  |  Сервис: Гүйлгээ";
+        ((Label)Controls["lblQueue"]!).Text = $"Таны өмнө {queueCount} хүн хүлээж байна";
+
+        // Дугаар авсны дараа ногоон өнгөтэй болгоно
+        ((Label)Controls["lblNumber"]!).ForeColor = Color.FromArgb(0, 153, 51);
+    }
+
+    /// <summary>
+    /// Тасалбар хэвлэх. PrintDocument ашиглана.
+    /// Жинхэнэ POS printer-д ESC/POS protocol ашиглана.
+    /// </summary>
+    private void BtnPrint_Click(object? sender, EventArgs e)
+    {
+        if (_lastNumber == 0) return;
+
+        var printDoc = new PrintDocument();
+        printDoc.PrintPage += (s, ev) =>
+        {
+            if (ev.Graphics is null) return;
+
+            var g = ev.Graphics;
+            var black = Brushes.Black;
+            var center = new StringFormat { Alignment = StringAlignment.Center };
+            float pageCenter = ev.PageBounds.Width / 2f;
+
+            // Банкны нэр
+            g.DrawString("ХААН БАНК",
+                new Font("Arial", 16, FontStyle.Bold),
+                black, pageCenter, 20, center);
+
+            // Ялгах зураас
+            g.DrawLine(Pens.Black, 20, 55, ev.PageBounds.Width - 20, 55);
+
+            // Дугаар
+            g.DrawString(_lastNumber.ToString("D3"),
+                new Font("Arial", 48, FontStyle.Bold),
+                black, pageCenter, 65, center);
+
+            // Дэлгэрэнгүй мэдээлэл
+            g.DrawLine(Pens.Black, 20, 130, ev.PageBounds.Width - 20, 130);
+            g.DrawString($"Сервис: Гүйлгээ",
+                new Font("Arial", 10), black, 25, 140);
+            g.DrawString($"Цаг: {_lastIssuedAt:yyyy-MM-dd HH:mm}",
+                new Font("Arial", 10), black, 25, 160);
+            g.DrawString($"Хүлээлт: {_lastQueueCount} хүн",
+                new Font("Arial", 10), black, 25, 180);
+            g.DrawLine(Pens.Black, 20, 200, ev.PageBounds.Width - 20, 200);
+
+            g.DrawString("Тавтай морилно уу!",
+                new Font("Arial", 9), Brushes.Gray, pageCenter, 210, center);
+        };
+
+        try
+        {
+            // Print dialog харуулж printer сонгуулна
+            using var dlg = new PrintDialog { Document = printDoc };
+            if (dlg.ShowDialog() == DialogResult.OK)
+                printDoc.Print();
+        }
+        catch (Exception ex)
+        {
+            ShowError($"Хэвлэхэд алдаа гарлаа: {ex.Message}");
+        }
+    }
+
+    /// <summary>Алдааны мэдэгдлийг form дотор харуулна.</summary>
+    private void ShowError(string message)
+    {
+        ((Label)Controls["lblNumber"]!).Text = "!";
+        ((Label)Controls["lblNumber"]!).ForeColor = Color.Red;
+        ((Label)Controls["lblTime"]!).Text = message;
+        ((Label)Controls["lblQueue"]!).Text = "";
     }
 }
 
-/// <summary>IssueTicket endpoint-ийн JSON хариуг хүлээн авах загвар.</summary>
-record TicketResponse(int Number, DateTime IssuedAt, string ServiceType, int QueueCount);
+/// <summary>IssueTicket endpoint-ийн DTO хариу.</summary>
+record IssueTicketResponseDto(
+    int Number,
+    DateTime IssuedAt,
+    string ServiceType,
+    int QueueCount
+);

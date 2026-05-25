@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 
 namespace TellerApp;
@@ -11,7 +12,11 @@ namespace TellerApp;
 public partial class Form1 : Form
 {
     private static readonly HttpClient _http = new();
-    private const string ServerUrl = "http://localhost:5000";
+    private static readonly string ServerUrl =
+    new ConfigurationBuilder()
+        .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+        .AddJsonFile("appsettings.json", optional: true)
+        .Build()["ServerUrl"] ?? "http://localhost:5000";
     private TabControl _tabs = null!;
 
     public Form1()

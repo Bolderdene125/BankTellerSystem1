@@ -1,5 +1,6 @@
-﻿using BankServer.Hubs;
-using BankServer.Services;
+﻿using BankServer.Business;
+using BankServer.Domain.DTOs;
+using BankServer.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
@@ -21,27 +22,30 @@ public class ExchangeRateController : ControllerBase
 
     /// <summary>Бүх валютын ханш. GET /api/exchangerate</summary>
     [HttpGet]
-    public IActionResult GetAll() => Ok(_rateService.GetAll());
+    public ActionResult<IEnumerable<ExchangeRateResponseDto>> GetAll() =>
+        Ok(_rateService.GetAll()
+            .Select(r => new ExchangeRateResponseDto(
+                r.Currency, r.BuyRate, r.SellRate, r.UpdatedAt)));
 
     /// <summary>
-    /// Ханш шинэчилнэ. Шинэчилсний дараа SignalR-ээр Blazor дэлгэцэнд явуулна.
+    /// Ханш шинэчилнэ. SignalR-ээр Blazor-д тэр даруй явуулна.
     /// PUT /api/exchangerate/USD
     /// Body: { "buyRate": 3450, "sellRate": 3470 }
     /// </summary>
     [HttpPut("{currency}")]
-    public async Task<IActionResult> Update(string currency, [FromBody] RateUpdateRequest req)
+    public async Task<ActionResult<ExchangeRateResponseDto>> Update(
+        string currency, [FromBody] RateUpdateRequestDto req)
     {
         if (!_rateService.Update(currency, req.BuyRate, req.SellRate))
             return NotFound($"'{currency}' валют олдсонгүй");
 
-        var updated = _rateService.Get(currency);
+        var updated = _rateService.Get(currency)!;
+        var dto = new ExchangeRateResponseDto(
+            updated.Currency, updated.BuyRate, updated.SellRate, updated.UpdatedAt);
 
-        // "ReceiveRateUpdate" — Blazor дэлгэц энэ event-г сонсоод тэр даруй шинэчлэгдэнэ
-        await _hub.Clients.All.SendAsync("ReceiveRateUpdate", updated);
+        // SignalR — Blazor дэлгэц тэр даруй шинэчлэгдэнэ
+        await _hub.Clients.All.SendAsync("ReceiveRateUpdate", dto);
 
-        return Ok(updated);
+        return Ok(dto);
     }
 }
-
-/// <summary>Ханш шинэчлэх хүсэлтийн body загвар.</summary>
-public record RateUpdateRequest(decimal BuyRate, decimal SellRate);

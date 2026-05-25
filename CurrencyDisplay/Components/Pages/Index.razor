@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @using Microsoft.AspNetCore.SignalR.Client
 @implements IAsyncDisposable
+@inject BankServerConfig ServerConfig
 
 <h2 style="text-align:center; color:#005a9e; font-size:2rem; margin:20px 0">
     💱 ВАЛЮТЫН ХАНШ
@@ -78,7 +79,7 @@ else
         {
             using var http = new HttpClient();
             var rates = await http.GetFromJsonAsync<List<ExchangeRate>>(
-                "http://localhost:5000/api/exchangerate");
+                $"{ServerConfig.Url}/api/exchangerate");
 
             if (rates is null) return;
 
@@ -102,7 +103,7 @@ else
         try
         {
             _hub = new HubConnectionBuilder()
-                .WithUrl("http://localhost:5000/bankhub")
+                .WithUrl($"{ServerConfig.Url}/bankhub")
                 .WithAutomaticReconnect()
                 .Build();
 
@@ -112,7 +113,6 @@ else
                     rate.Currency, rate.BuyRate, rate.SellRate,
                     rate.UpdatedAt, IsNew: true);
                 _lastUpdated = DateTime.Now;
-                // InvokeAsync: SignalR өөр thread-д ажиллах тул шаардлагатай
                 InvokeAsync(StateHasChanged);
             });
 

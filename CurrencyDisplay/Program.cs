@@ -5,11 +5,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// BankServer-т HTTP хүсэлт явуулахад хэрэгтэй
+// appsettings.json-оос URL авна
+var bankServerUrl = builder.Configuration["BankServerUrl"] ?? "http://localhost:5000";
+
+// HttpClient inject
 builder.Services.AddScoped(sp => new HttpClient
 {
-    BaseAddress = new Uri("http://localhost:5000")
+    BaseAddress = new Uri(bankServerUrl)
 });
+
+// BankServerUrl-г inject хийхийн тулд wrapper класс ашиглана
+builder.Services.AddSingleton(new BankServerConfig(bankServerUrl));
 
 var app = builder.Build();
 
@@ -26,3 +32,9 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+/// <summary>BankServer URL-г Blazor component-д inject хийх wrapper.</summary>
+public class BankServerConfig(string url)
+{
+    public string Url { get; } = url;
+}

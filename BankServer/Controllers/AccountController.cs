@@ -1,4 +1,5 @@
-﻿using BankServer.Services;
+﻿using BankServer.Business;
+using BankServer.Domain.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankServer.Controllers;
@@ -17,14 +18,20 @@ public class AccountController : ControllerBase
 
     /// <summary>Бүх дансны жагсаалт. GET /api/account</summary>
     [HttpGet]
-    public IActionResult GetAll() => Ok(_accountService.GetAllAccounts());
+    public ActionResult<IEnumerable<AccountResponseDto>> GetAll() =>
+        Ok(_accountService.GetAllAccounts()
+            .Select(a => new AccountResponseDto(
+                a.AccountNumber, a.OwnerName, a.MNT, a.USD)));
 
     /// <summary>Нэг дансны мэдээлэл. GET /api/account/ACC001</summary>
     [HttpGet("{accountNumber}")]
-    public IActionResult Get(string accountNumber)
+    public ActionResult<AccountResponseDto> Get(string accountNumber)
     {
         var account = _accountService.GetAccount(accountNumber);
-        return account is null ? NotFound("Данс олдсонгүй") : Ok(account);
+        if (account is null) return NotFound("Данс олдсонгүй");
+
+        return Ok(new AccountResponseDto(
+            account.AccountNumber, account.OwnerName, account.MNT, account.USD));
     }
 
     /// <summary>
@@ -32,19 +39,19 @@ public class AccountController : ControllerBase
     /// Body: { "fromAccount": "ACC001", "toAccount": "ACC002", "amount": 100000 }
     /// </summary>
     [HttpPost("transfer")]
-    public async Task<IActionResult> Transfer([FromBody] TransferRequest req)
+    public async Task<ActionResult<TransferResponseDto>> Transfer(
+        [FromBody] TransferRequestDto req)
     {
         if (string.IsNullOrEmpty(req.FromAccount) ||
             string.IsNullOrEmpty(req.ToAccount) ||
             req.Amount <= 0)
-            return BadRequest("Дансны дугаар болон дүн заавал байна");
+            return BadRequest(new TransferResponseDto(false, "Дутуу мэдээлэл"));
 
         var (success, message) = await _accountService.TransferAsync(
             req.FromAccount, req.ToAccount, req.Amount);
 
-        return success ? Ok(new { message }) : BadRequest(new { message });
+        return success
+            ? Ok(new TransferResponseDto(true, message))
+            : BadRequest(new TransferResponseDto(false, message));
     }
 }
-
-/// <summary>Гүйлгээний хүсэлтийн body загвар.</summary>
-public record TransferRequest(string FromAccount, string ToAccount, decimal Amount);

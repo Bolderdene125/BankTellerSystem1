@@ -1,8 +1,0 @@
-wwwroot\app.css
-Components\Layout\ReconnectModal.razor.js
-C:\Users\ADOLBOOK\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.8\build\..\_framework\blazor.web.js
-C:\Users\ADOLBOOK\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.8\build\..\_framework\blazor.server.js
-C:\Documents\WindowsProgramming\BankTellerSystem\CurrencyDisplay\wwwroot\app.css
-C:\Documents\WindowsProgramming\BankTellerSystem\CurrencyDisplay\Components\Layout\ReconnectModal.razor.js
-C:\Users\ADOLBOOK\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.8\_framework\blazor.web.js
-C:\Users\ADOLBOOK\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.8\_framework\blazor.server.js
