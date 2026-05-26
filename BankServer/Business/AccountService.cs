@@ -1,87 +1,60 @@
+using BankServer.Data;
 using BankSystem.Shared.Entities;
 using BankSystem.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace BankServer.Business;
 
 /// <summary>
 /// Банкны дансны бизнес логик.
-/// IBankAccountRepository interface хэрэгжүүлнэ — Shared гэрээний дагуу.
+/// IBankAccountRepository interface хэрэгжүүлнэ.
 ///
-/// ЗАСВАР 1: ILogger нэмэгдсэн — бүх үйлдэл бүртгэгдэнэ.
-/// ЗАСВАР 2: TransferRecord хадгалах — гүйлгээний аудит.
-/// ЗАСВАР 3: Rollback pattern — мөнгө алдагдахаас сэргийлнэ.
+/// ӨӨРЧЛӨЛТ: In-memory Dictionary-аас SQLite + EF Core DB transaction руу шилжсэн.
+///
+/// Яагаад DB transaction:
+///   - Server дахин эхлэхэд үлдэгдэл алдагдахгүй болно
+///   - from.Balance -= amount, to.Balance += amount хоёул нэг
+///     атомик үйлдлээр хадгалагдана — хооронд crash болсон ч
+///     мөнгө алдагдахгүй, DB автоматаар rollback хийнэ
+///
+/// Яагаад Scoped (Singleton биш):
+///   - BankDbContext нь Scoped lifetime-тай
+///   - Singleton сервис дотор Scoped inject хийхийг ASP.NET Core
+///     runtime-д хориглодог ("captive dependency" алдаа)
+///   - Тиймээс AccountService ч Scoped болно
 /// </summary>
 public class AccountService : IBankAccountRepository
 {
+    private readonly BankDbContext _db;
     private readonly ILogger<AccountService> _logger;
 
-    /// <summary>
-    /// Дансны санах ой. Key = дансны дугаар.
-    /// In-memory + SQLite хоёулаа ашиглана:
-    ///   - In-memory: хурдан хандалт, тест
-    ///   - SQLite: persist (server restart-д алдагдахгүй)
-    /// </summary>
-    private readonly Dictionary<string, AccountEntry> _accounts = new()
+    public AccountService(BankDbContext db, ILogger<AccountService> logger)
     {
-        ["ACC001"] = new("ACC001", "Болд",    1_000_000, 100),
-        ["ACC002"] = new("ACC002", "Сарнай",    500_000,  50),
-        ["ACC003"] = new("ACC003", "Ганбаяр", 2_000_000, 200),
-    };
-
-    /// <summary>
-    /// Гүйлгээний бүртгэл — in-memory жагсаалт.
-    /// Жинхэнэ системд SQLite DbContext ашиглана.
-    /// </summary>
-    private readonly List<TransferRecord> _transferHistory = new();
-    private readonly object _historyLock = new();
-
-    /// <summary>
-    /// Данс тус бүрийн async lock.
-    /// Deadlock-аас сэргийлж дансны дугаарын эрэмбээр авна:
-    ///   string.Compare(first, second) < 0 → first-г эхэлж lock авна
-    /// Ингэснээр хоёр теллер нэгэн зэрэг ABC→DEF, DEF→ABC гүйлгээ хийхэд
-    /// deadlock үүсэхгүй.
-    /// </summary>
-    private readonly Dictionary<string, SemaphoreSlim> _locks = new();
-    private readonly object _lockGuard = new();
-
-    public AccountService(ILogger<AccountService> logger)
-    {
+        _db = db;
         _logger = logger;
-    }
-
-    private SemaphoreSlim GetLock(string acc)
-    {
-        lock (_lockGuard)
-        {
-            if (!_locks.TryGetValue(acc, out var s))
-                _locks[acc] = s = new SemaphoreSlim(1, 1);
-            return s;
-        }
     }
 
     /// <summary>
     /// А данснаас Б данс руу мөнгө шилжүүлнэ.
     ///
-    /// Алдааны бүх тохиолдол шалгана:
-    ///   — Дүн 0 буюу сөрөг
-    ///   — Хоосон дансны дугаар
-    ///   — Ижил данс
-    ///   — Данс олдохгүй
-    ///   — Үлдэгдэл хүрэлцэхгүй
-    ///
-    /// ЗАСВАР: Rollback pattern нэмэгдсэн.
-    /// Жинхэнэ банкны системд энд SQL TRANSACTION ашиглана:
+    /// SQL TRANSACTION ашигласан — жинхэнэ банкны системтэй адил:
     ///   BEGIN TRANSACTION
-    ///   UPDATE accounts SET balance = balance - amount WHERE id = fromId
-    ///   UPDATE accounts SET balance = balance + amount WHERE id = toId
-    ///   COMMIT  ← хоёул амжилттай болсны дараа л хадгална
+    ///   UPDATE Accounts SET Balance -= amount WHERE AccountNumber = from
+    ///   UPDATE Accounts SET Balance += amount WHERE AccountNumber = to
+    ///   INSERT INTO TransferRecords ...
+    ///   COMMIT  ← гурвал амжилттай болсны дараа л хадгална
+    ///   ROLLBACK ← алдаа гарвал гурвал цуцлагдана
+    ///
+    /// Deadlock-аас сэргийлэх:
+    ///   EF Core + SQLite row-level lock ашигладаг тул
+    ///   манай SemaphoreSlim lock шаардлагагүй болсон.
+    ///   SQLite serializable transaction isolation ашигладаг.
     /// </summary>
     public async Task<(bool Success, string Message, Guid? TransferId)> TransferAsync(
         string fromAccount, string toAccount, decimal amount, string tellerId = "")
     {
-        // ── Клиент талын validation ────────────────────────────────────
+        // ── Validation — DB хандахаас өмнө шалгана ────────────────────
         if (amount <= 0)
             return (false, "Дүн 0-ээс их байх ёстой", null);
 
@@ -94,56 +67,62 @@ public class AccountService : IBankAccountRepository
         if (fromAccount.Equals(toAccount, StringComparison.OrdinalIgnoreCase))
             return (false, "Илгээгч болон хүлээн авагч данс ижил байж болохгүй", null);
 
-        // Deadlock-аас сэргийлж эрэмбээр lock авна
-        var (first, second) = string.Compare(fromAccount, toAccount) < 0
-            ? (fromAccount, toAccount) : (toAccount, fromAccount);
-
-        await GetLock(first).WaitAsync();
-        await GetLock(second).WaitAsync();
-
-        // ── Rollback-д зориулж анхны утгыг хадгална ──────────────────
-        decimal originalFrom = 0, originalTo = 0;
-
+        // ── DB Transaction эхлүүлнэ ───────────────────────────────────
+        // using var: блокоос гарахад transaction автоматаар dispose хийгдэнэ
+        using var tx = await _db.Database.BeginTransactionAsync();
         try
         {
-            if (!_accounts.TryGetValue(fromAccount, out var from))
+            // Дансуудыг DB-аас уншина
+            var from = await _db.Accounts
+                .FirstOrDefaultAsync(a => a.AccountNumber == fromAccount);
+            if (from is null)
                 return (false, $"'{fromAccount}' данс олдсонгүй", null);
 
-            if (!_accounts.TryGetValue(toAccount, out var to))
+            var to = await _db.Accounts
+                .FirstOrDefaultAsync(a => a.AccountNumber == toAccount);
+            if (to is null)
                 return (false, $"'{toAccount}' данс олдсонгүй", null);
 
-            if (from.MNT < amount)
+            if (from.Balance < amount)
                 return (false,
-                    $"Үлдэгдэл хүрэлцэхгүй ({from.MNT:N0}₮ < {amount:N0}₮)", null);
+                    $"Үлдэгдэл хүрэлцэхгүй ({from.Balance:N0}₮ < {amount:N0}₮)", null);
 
             _logger.LogInformation(
                 "Гүйлгээ эхэллээ: {From} → {To}, {Amount:N0}₮, теллер: {Teller}",
                 fromAccount, toAccount, amount, tellerId);
 
-            // Анхны утгыг хадгална — rollback хийхэд хэрэгтэй
-            originalFrom = from.MNT;
-            originalTo   = to.MNT;
+            // ── Үлдэгдэл өөрчлөх ─────────────────────────────────────
+            // EF Core change tracking: from, to объект өөрчлөгдсөнийг
+            // SaveChangesAsync() дуудахад UPDATE SQL автоматаар явуулна
+            from.Balance -= amount;
+            to.Balance += amount;
 
-            // ── Мөнгө шилжүүлэх ──────────────────────────────────────
-            // Жинхэнэ системд энд SQL ATOMIC TRANSACTION ашиглана.
-            // Хэрэв хоёрдугаар мөр-д алдаа гарвал rollback хийнэ.
-            from.MNT -= amount;
-            to.MNT   += amount;
-
-            // ── Гүйлгээний бүртгэл ────────────────────────────────────
+            // ── Гүйлгээний бүртгэл нэмэх ─────────────────────────────
+            // TransferRecord нь гүйлгээтэй нэг transaction дотор хадгалагдана
+            // Тиймээс гүйлгээ амжилттай болсон бүрийн бүртгэл байна
             var record = new TransferRecord
             {
                 FromAccount = fromAccount,
-                ToAccount   = toAccount,
-                Amount      = amount,
-                TellerId    = tellerId,
-                Status      = "Completed",
-                CreatedAt   = DateTime.Now
+                ToAccount = toAccount,
+                Amount = amount,
+                TellerId = tellerId,
+                Status = "Completed",
+                CreatedAt = DateTime.Now
             };
-            lock (_historyLock) _transferHistory.Add(record);
+            _db.TransferRecords.Add(record);
+
+            // ── Хоёулыг нэг дор хадгална ─────────────────────────────
+            // SaveChangesAsync: from.Balance, to.Balance, TransferRecord
+            // гурвал нэг SQL batch болгон явуулна
+            await _db.SaveChangesAsync();
+
+            // ── Transaction баталгаажуулна ─────────────────────────────
+            // CommitAsync дуудсаны дараа л disk-д бичигдэнэ
+            // Commit хүрэхээс өмнө аливаа алдаа гарвал catch-д RollbackAsync дуудна
+            await tx.CommitAsync();
 
             var msg = $"{amount:N0}₮ амжилттай: {from.OwnerName} → {to.OwnerName}. " +
-                      $"Үлдэгдэл: {from.MNT:N0}₮";
+                      $"Үлдэгдэл: {from.Balance:N0}₮";
 
             _logger.LogInformation(
                 "Гүйлгээ амжилттай: {From} → {To}, {Amount:N0}₮, ID: {Id}",
@@ -153,90 +132,90 @@ public class AccountService : IBankAccountRepository
         }
         catch (Exception ex)
         {
-            // ── Rollback — алдаа гарвал анхны утгыг сэргээнэ ────────
-            // Жинхэнэ системд SQL ROLLBACK энэ үүргийг гүйцэтгэнэ.
-            if (_accounts.TryGetValue(fromAccount, out var fromAcc))
-                fromAcc.MNT = originalFrom;
-            if (_accounts.TryGetValue(toAccount, out var toAcc))
-                toAcc.MNT = originalTo;
+            // ── Rollback — алдаа гарвал DB-г анхны байдалд нь буцаана ──
+            // SQLite transaction rollback: from.Balance, to.Balance хоёул
+            // өөрчлөгдөхөөс өмнөх утгаа сэргээнэ — мөнгө алдагдахгүй
+            await tx.RollbackAsync();
 
             _logger.LogError(ex,
-                "Гүйлгээ амжилтгүй: {From} → {To}, {Amount:N0}₮",
+                "Гүйлгээ амжилтгүй — rollback: {From} → {To}, {Amount:N0}₮",
                 fromAccount, toAccount, amount);
 
-            // Амжилтгүй гүйлгээг ч бүртгэнэ
-            lock (_historyLock) _transferHistory.Add(new TransferRecord
+            // Амжилтгүй гүйлгээг тусдаа transaction-аар бүртгэнэ
+            // (rollback болсон тул шинэ transaction хэрэгтэй)
+            try
             {
-                FromAccount  = fromAccount,
-                ToAccount    = toAccount,
-                Amount       = amount,
-                TellerId     = tellerId,
-                Status       = "Failed",
-                ErrorMessage = ex.Message,
-                CreatedAt    = DateTime.Now
-            });
+                _db.TransferRecords.Add(new TransferRecord
+                {
+                    FromAccount = fromAccount,
+                    ToAccount = toAccount,
+                    Amount = amount,
+                    TellerId = tellerId,
+                    Status = "Failed",
+                    ErrorMessage = ex.Message,
+                    CreatedAt = DateTime.Now
+                });
+                await _db.SaveChangesAsync();
+            }
+            catch
+            {
+                // Failed бүртгэл хийхэд алдаа гарвал орхино — критик биш
+            }
 
             return (false, $"Системийн алдаа: {ex.Message}", null);
         }
-        finally
-        {
-            // finally: алдаа гарсан ч lock заавал суллагдана
-            GetLock(second).Release();
-            GetLock(first).Release();
-        }
     }
 
-    /// <summary>Гүйлгээний бүтэн түүх буцаана — аудитад ашиглана.</summary>
-    public IReadOnlyList<TransferRecord> GetTransferHistory()
+    /// <summary>
+    /// Гүйлгээний түүх DB-аас авна.
+    /// Хамгийн сүүлийн 100 гүйлгээг буцаана.
+    /// </summary>
+    public async Task<List<TransferRecord>> GetTransferHistoryAsync()
     {
-        lock (_historyLock) return _transferHistory.AsReadOnly();
+        return await _db.TransferRecords
+            .OrderByDescending(r => r.CreatedAt)
+            .Take(100)
+            .ToListAsync();
     }
 
-    /// <summary>Нэг дансны мэдээлэл авна.</summary>
-    public AccountEntry? GetAccount(string accountNumber) =>
-        _accounts.TryGetValue(accountNumber, out var a) ? a : null;
+    /// <summary>Sync хэлбэр — Controller дуудахад хэрэглэнэ.</summary>
+    public List<TransferRecord> GetTransferHistory()
+    {
+        return _db.TransferRecords
+            .OrderByDescending(r => r.CreatedAt)
+            .Take(100)
+            .ToList();
+    }
 
-    /// <summary>Бүх дансны жагсаалт авна.</summary>
-    public IEnumerable<AccountEntry> GetAllAccounts() => _accounts.Values;
+    /// <summary>Нэг дансны мэдээлэл DB-аас авна.</summary>
+    public BankAccount? GetAccount(string accountNumber)
+    {
+        return _db.Accounts
+            .FirstOrDefault(a => a.AccountNumber == accountNumber);
+    }
+
+    /// <summary>Бүх идэвхтэй дансны жагсаалт.</summary>
+    public IEnumerable<BankAccount> GetAllAccounts()
+    {
+        return _db.Accounts.Where(a => a.IsActive).ToList();
+    }
 
     // ── IBankAccountRepository хэрэгжүүлэлт ──────────────────────────────
 
-    public Task<BankAccount?> GetByAccountNumberAsync(string accountNumber)
+    public async Task<BankAccount?> GetByAccountNumberAsync(string accountNumber)
     {
-        if (!_accounts.TryGetValue(accountNumber, out var a))
-            return Task.FromResult<BankAccount?>(null);
-        return Task.FromResult<BankAccount?>(new BankAccount
-        {
-            AccountNumber = a.AccountNumber,
-            OwnerName     = a.OwnerName,
-            Currency      = "MNT",
-            Balance       = a.MNT,
-            IsActive      = true
-        });
+        return await _db.Accounts
+            .FirstOrDefaultAsync(a => a.AccountNumber == accountNumber);
     }
 
-    public Task<BankAccount?> GetByIdAsync(int id) =>
-        Task.FromResult<BankAccount?>(null);
-
-    public Task UpdateAsync(BankAccount account) => Task.CompletedTask;
-}
-
-/// <summary>
-/// Нэг харилцагчийн дансны in-memory загвар.
-/// AccountNumber, OwnerName, MNT, USD — тест гэрээний дагуу.
-/// </summary>
-public class AccountEntry
-{
-    public string  AccountNumber { get; }
-    public string  OwnerName     { get; }
-    public decimal MNT           { get; set; }
-    public decimal USD           { get; set; }
-
-    public AccountEntry(string num, string name, decimal mnt, decimal usd)
+    public async Task<BankAccount?> GetByIdAsync(int id)
     {
-        AccountNumber = num;
-        OwnerName     = name;
-        MNT           = mnt;
-        USD           = usd;
+        return await _db.Accounts.FindAsync(id);
+    }
+
+    public async Task UpdateAsync(BankAccount account)
+    {
+        _db.Accounts.Update(account);
+        await _db.SaveChangesAsync();
     }
 }

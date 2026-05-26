@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 
+Console.OutputEncoding = System.Text.Encoding.UTF8;
 Console.WriteLine("╔══════════════════════════════════════╗");
 Console.WriteLine("║  ХЭРЭГЛЭГЧИЙН БАНК — SOCKET СЕРВЕР  ║");
 Console.WriteLine("╚══════════════════════════════════════╝");

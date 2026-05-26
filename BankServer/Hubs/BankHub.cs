@@ -6,9 +6,9 @@ namespace BankServer.Hubs;
 /// SignalR Hub — клиентүүд WebSocket-ээр холбогдоно.
 ///
 /// Холболтын урсгал:
-///   CurrencyDisplay Blazor  ──┐
-///   SocketServer            ──┤── BankHub ── Controller-ууд
-///                             └── broadcast (ReceiveRateUpdate,
+///  
+///   SocketServer  ── BankHub ── Controller-ууд
+///   CurrencyDisplay Blazor  ── broadcast (ReceiveRateUpdate,
 ///                                            ReceiveTellerCall,
 ///                                            ReceiveNumberUpdate)
 ///

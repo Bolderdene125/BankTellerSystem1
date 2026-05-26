@@ -4,18 +4,16 @@
 @implements IAsyncDisposable
 @inject BankServerConfig ServerConfig
 
-@* ══════════════════════════════════════════════════════════════════════════
-   Хэрэглэгчийн Банк — Валютын Ханшийн Дэлгэц
+@* Хэрэглэгчийн Банк — Валютын Ханшийн Дэлгэц
    Blazor Server-side rendering + SignalR realtime
 
-   ЗАСВАР: <table> → card-row grid (responsive, илүү харагцуу)
+   ЗАСВАР: <table> → card-row grid 
    ЗАСВАР: "шинэ" badge — 8 секундын дараа автоматаар арилна
    ЗАСВАР: Navbar + hero section нэмэгдсэн
-   ЗАСВАР: Animated connection dot
-   ══════════════════════════════════════════════════════════════════════════ *@
+   ЗАСВАР: Animated connection dot *@
 
 <style>
-    /* ── Хэрэглэгчийн Банк өнгөний палитр ─────────────────────────────── */
+    /* ── Хэрэглэгчийн Банкний өнгө ─────────────────────────────── */
     :root {
         --hb-navy:   #0B2C4A;
         --hb-blue:   #1565C0;
@@ -78,7 +76,7 @@
     }
 
     /* ── Animated connection dot ─────────────────────────────────────────
-       CSS @keyframes — SignalR холбогдсон/салсан байдлыг харуулна.        */
+       CSS @@keyframes — SignalR холбогдсон/салсан байдлыг харуулна.        */
     .conn-dot {
         width: 8px;
         height: 8px;
@@ -87,7 +85,7 @@
     }
 
     .conn-dot.connected {
-        background: #4CAF50;
+        background: #4CAF50;S
         animation: pulse-dot 2s ease-in-out infinite;
     }
 

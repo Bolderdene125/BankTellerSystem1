@@ -43,6 +43,20 @@
           "build/netstandard2.0/Microsoft.CodeCoverage.targets": {}
         }
       },
+      "Microsoft.Data.Sqlite/10.0.8": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Data.Sqlite.Core": "10.0.8",
+          "SQLitePCLRaw.bundle_e_sqlite3": "2.1.11",
+          "SQLitePCLRaw.core": "2.1.11"
+        },
+        "compile": {
+          "lib/netstandard2.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/_._": {}
+        }
+      },
       "Microsoft.Data.Sqlite.Core/10.0.8": {
         "type": "package",
         "dependencies": {
@@ -96,6 +110,24 @@
       },
       "Microsoft.EntityFrameworkCore.Analyzers/10.0.8": {
         "type": "package"
+      },
+      "Microsoft.EntityFrameworkCore.InMemory/10.0.8": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "10.0.8",
+          "Microsoft.Extensions.Caching.Memory": "10.0.8",
+          "Microsoft.Extensions.Logging": "10.0.8"
+        },
+        "compile": {
+          "lib/net10.0/Microsoft.EntityFrameworkCore.InMemory.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.EntityFrameworkCore.InMemory.dll": {
+            "related": ".xml"
+          }
+        }
       },
       "Microsoft.EntityFrameworkCore.Relational/10.0.8": {
         "type": "package",
@@ -1328,6 +1360,20 @@
         "microsoft.codecoverage.nuspec"
       ]
     },
+    "Microsoft.Data.Sqlite/10.0.8": {
+      "sha512": "iyDWyD6r/SnqgoYYQIlLhxL1ZIGZr+SByMXrJKSA1w7sOt7bPMJmN3h2laqwKqyQkjh/lUPJ7LTXwpvqzhggOQ==",
+      "type": "package",
+      "path": "microsoft.data.sqlite/10.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "lib/netstandard2.0/_._",
+        "microsoft.data.sqlite.10.0.8.nupkg.sha512",
+        "microsoft.data.sqlite.nuspec"
+      ]
+    },
     "Microsoft.Data.Sqlite.Core/10.0.8": {
       "sha512": "26t7WDiEjjAls/sFpWvVEFDxt+7Q5VPt6+blU2Lafuj9L8PzAv/GtGV4cqVPtrhWbfD2BX/z2v8hD1qXYtK6Aw==",
       "type": "package",
@@ -1388,6 +1434,21 @@
         "docs/PACKAGE.md",
         "microsoft.entityframeworkcore.analyzers.10.0.8.nupkg.sha512",
         "microsoft.entityframeworkcore.analyzers.nuspec"
+      ]
+    },
+    "Microsoft.EntityFrameworkCore.InMemory/10.0.8": {
+      "sha512": "C3T9khx1oiLPrS6ehoSnZptiEuTOIaX60it9SGvCkWTeF5i6+IceK6p7mtx+mkFwWB5qx+v3IhgG51iUEtLq9w==",
+      "type": "package",
+      "path": "microsoft.entityframeworkcore.inmemory/10.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "lib/net10.0/Microsoft.EntityFrameworkCore.InMemory.dll",
+        "lib/net10.0/Microsoft.EntityFrameworkCore.InMemory.xml",
+        "microsoft.entityframeworkcore.inmemory.10.0.8.nupkg.sha512",
+        "microsoft.entityframeworkcore.inmemory.nuspec"
       ]
     },
     "Microsoft.EntityFrameworkCore.Relational/10.0.8": {
@@ -2637,6 +2698,8 @@
   "projectFileDependencyGroups": {
     "net10.0": [
       "BankServer >= 1.0.0",
+      "Microsoft.Data.Sqlite >= 10.0.8",
+      "Microsoft.EntityFrameworkCore.InMemory >= 10.0.8",
       "Microsoft.Extensions.Logging.Abstractions >= 10.0.8",
       "Microsoft.NET.Test.Sdk >= 18.5.1",
       "coverlet.collector >= 6.0.4",
@@ -2700,6 +2763,14 @@
         "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
+          "Microsoft.Data.Sqlite": {
+            "target": "Package",
+            "version": "[10.0.8, )"
+          },
+          "Microsoft.EntityFrameworkCore.InMemory": {
+            "target": "Package",
+            "version": "[10.0.8, )"
+          },
           "Microsoft.Extensions.Logging.Abstractions": {
             "target": "Package",
             "version": "[10.0.8, )"

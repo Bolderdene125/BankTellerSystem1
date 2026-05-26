@@ -33,17 +33,32 @@ try
     builder.Services.AddSignalR();
 
     // ── SQLite — bank.db файлд persist хийнэ ────────────────────────────
-    // ЗАСВАР: DbContext бүртгэгдлээ — өмнө нь зөвхөн тодорхойлогдсон байсан
     builder.Services.AddDbContext<BankDbContext>(opt =>
         opt.UseSqlite("Data Source=bank.db"));
 
-    // ── Singleton services ───────────────────────────────────────────────
-    // AccountService болон ExchangeRateService in-memory тул Singleton.
-    // Restart хийхэд in-memory дата алдагдана — SQLite-г нэмсэн.
-    builder.Services.AddSingleton<AccountService>();
-    builder.Services.AddSingleton<IBankAccountRepository>(
+    // ── AccountService: Scoped — BankDbContext inject хийдэг тул ────────
+    //
+    // ӨМНӨ (буруу):
+    //   builder.Services.AddSingleton<AccountService>();
+    //
+    // ДАРАА (зөв):
+    //   builder.Services.AddScoped<AccountService>();
+    //
+    // Яагаад:
+    //   BankDbContext нь Scoped lifetime-тай (HTTP request бүрт шинэ instance).
+    //   Singleton сервис дотор Scoped inject хийхийг ASP.NET Core хориглодог.
+    //   Хориглохгүй бол runtime-д "Cannot consume scoped service from singleton"
+    //   алдаа гарна.
+    //
+    // Scoped болсноор HTTP request бүрт шинэ AccountService үүснэ.
+    // In-memory state (Dictionary, List) байхгүй болсон тул энэ нь зөв.
+    builder.Services.AddScoped<AccountService>();
+    builder.Services.AddScoped<IBankAccountRepository>(
         sp => sp.GetRequiredService<AccountService>());
 
+    // ── ExchangeRateService, TicketQueueService: Singleton хэвээр ───────
+    // Эдгээр нь DbContext ашигладаггүй, in-memory ConcurrentDictionary,
+    // Channel<T> ашигладаг тул Singleton байсаар байна.
     builder.Services.AddSingleton<ExchangeRateService>();
     builder.Services.AddSingleton<ICurrencyRateRepository>(
         sp => sp.GetRequiredService<ExchangeRateService>());
@@ -61,6 +76,8 @@ try
     var app = builder.Build();
 
     // ── SQLite DB үүсгэх + seed ──────────────────────────────────────────
+    // EnsureCreated: bank.db байхгүй бол үүсгэж seed өгөгдлийг оруулна.
+    // bank.db аль хэдийн байвал юу ч хийхгүй — өгөгдөл хадгалагдсан хэвээр.
     using (var scope = app.Services.CreateScope())
     {
         var db = scope.ServiceProvider.GetRequiredService<BankDbContext>();

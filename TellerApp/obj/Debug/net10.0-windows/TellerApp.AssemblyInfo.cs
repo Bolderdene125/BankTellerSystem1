@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TellerApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+576a006c7d17f0617f64bc8d9711865fc01887cb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c9ceccc8a258d8f5132daa3c461186e2b41e5bb")]
 [assembly: System.Reflection.AssemblyProductAttribute("TellerApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TellerApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

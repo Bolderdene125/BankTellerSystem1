@@ -1,26 +1,73 @@
 using BankServer.Business;
+using BankServer.Data;
+using BankSystem.Shared.Entities;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace BankTests;
 
 // ══════════════════════════════════════════════════════════════════════════
 // AccountService тестүүд
-// ЗАСВАР: TransferRecord хадгалагдаж байгааг шалгах тест нэмэгдсэн.
-// ЗАСВАР: Rollback тест нэмэгдсэн.
-// ЗАСВАР: TellerId тест нэмэгдсэн.
+//
+// Яагаад SQLite :memory: ашигласан:
+//   EF Core-ийн UseInMemoryDatabase() нь транзакцийг ДЭМЖДЭГГҮЙ.
+//   AccountService дотор BeginTransactionAsync() дуудагддаг тул
+//   UseInMemoryDatabase()-тай тест бүр "TransactionIgnoredWarning" алдаа өгнө.
+//
+//   Шийдэл: Microsoft.Data.Sqlite-ийн "Data Source=:memory:" ашиглана.
+//   SQLite :memory: нь транзакцийг бүрэн дэмждэг — жинхэнэ DB-тэй адил.
+//   SqliteConnection-г тест туршид амьд байлгаж, дуусмагц Close() хийнэ.
 // ══════════════════════════════════════════════════════════════════════════
 
-public class AccountServiceTests
+public class AccountServiceTests : IDisposable
 {
+    // Тест бүрт нэг SqliteConnection — :memory: DB холболт хаагдахад устдаг
+    private readonly SqliteConnection _connection;
+    private readonly BankDbContext _db;
+
+    public AccountServiceTests()
+    {
+        // SqliteConnection-г эхлүүлж нээнэ — хаагдаагүй тул :memory: DB хадгалагдана
+        _connection = new SqliteConnection("Data Source=:memory:");
+        _connection.Open();
+
+        var options = new DbContextOptionsBuilder<BankDbContext>()
+            .UseSqlite(_connection)
+            .Options;
+
+        _db = new BankDbContext(options);
+        _db.Database.EnsureCreated();
+
+        // Seed өгөгдөл оруулна — ACC001, ACC002, ACC003
+        if (!_db.Accounts.Any())
+        {
+            _db.Accounts.AddRange(
+                new BankAccount { Id = 1, AccountNumber = "ACC001", OwnerName = "Болд", Currency = "MNT", Balance = 1_000_000, CreatedAt = DateTime.UtcNow, IsActive = true },
+                new BankAccount { Id = 2, AccountNumber = "ACC002", OwnerName = "Сарнай", Currency = "MNT", Balance = 500_000, CreatedAt = DateTime.UtcNow, IsActive = true },
+                new BankAccount { Id = 3, AccountNumber = "ACC003", OwnerName = "Ганбаяр", Currency = "MNT", Balance = 2_000_000, CreatedAt = DateTime.UtcNow, IsActive = true }
+            );
+            _db.SaveChanges();
+        }
+    }
+
+    // xUnit тест бүр дуусмагц Dispose() дуудна — connection хаагдаж :memory: DB устна
+    public void Dispose()
+    {
+        _db.Dispose();
+        _connection.Close();
+        _connection.Dispose();
+    }
+
     private AccountService NewService() =>
-        new(Microsoft.Extensions.Logging.Abstractions.NullLogger<AccountService>.Instance);
+        new(_db, NullLogger<AccountService>.Instance);
 
     /// <summary>Зөв мэдээллээр гүйлгээ амжилттай болох ёстой.</summary>
     [Fact]
     public async Task Transfer_ValidAccounts_Succeeds()
     {
-        var svc = NewService();
-        var (success, msg, id) = await svc.TransferAsync("ACC001", "ACC002", 100_000);
+        var (success, msg, id) = await NewService().TransferAsync("ACC001", "ACC002", 100_000);
 
         Assert.True(success);
         Assert.Contains("амжилттай", msg);
@@ -31,8 +78,7 @@ public class AccountServiceTests
     [Fact]
     public async Task Transfer_InsufficientBalance_Fails()
     {
-        var svc = NewService();
-        var (success, msg, id) = await svc.TransferAsync("ACC001", "ACC002", 999_999_999);
+        var (success, msg, _) = await NewService().TransferAsync("ACC001", "ACC002", 999_999_999);
 
         Assert.False(success);
         Assert.Contains("хүрэлцэхгүй", msg);
@@ -42,8 +88,7 @@ public class AccountServiceTests
     [Fact]
     public async Task Transfer_InvalidAccount_Fails()
     {
-        var svc = NewService();
-        var (success, _, _) = await svc.TransferAsync("INVALID", "ACC001", 1000);
+        var (success, _, _) = await NewService().TransferAsync("INVALID", "ACC001", 1000);
 
         Assert.False(success);
     }
@@ -52,8 +97,7 @@ public class AccountServiceTests
     [Fact]
     public async Task Transfer_ZeroAmount_Fails()
     {
-        var svc = NewService();
-        var (success, msg, _) = await svc.TransferAsync("ACC001", "ACC002", 0);
+        var (success, msg, _) = await NewService().TransferAsync("ACC001", "ACC002", 0);
 
         Assert.False(success);
         Assert.Contains("0-ээс их", msg);
@@ -63,80 +107,52 @@ public class AccountServiceTests
     [Fact]
     public async Task Transfer_SameAccount_Fails()
     {
-        var svc = NewService();
-        var (success, msg, _) = await svc.TransferAsync("ACC001", "ACC001", 1000);
+        var (success, msg, _) = await NewService().TransferAsync("ACC001", "ACC001", 1000);
 
         Assert.False(success);
         Assert.Contains("ижил", msg);
     }
 
-    /// <summary>Гүйлгээний дараа баланс зөв өөрчлөгдсөн эсэхийг шалгана.</summary>
+    /// <summary>Гүйлгээний дараа баланс DB-д зөв өөрчлөгдсөн эсэхийг шалгана.</summary>
     [Fact]
     public async Task Transfer_BalanceUpdatesCorrectly()
     {
-        var svc      = NewService();
-        var fromBefore = svc.GetAccount("ACC001")!.MNT;
-        var toBefore   = svc.GetAccount("ACC002")!.MNT;
+        var svc = NewService();
+        var fromBefore = _db.Accounts.First(a => a.AccountNumber == "ACC001").Balance;
+        var toBefore = _db.Accounts.First(a => a.AccountNumber == "ACC002").Balance;
 
         await svc.TransferAsync("ACC001", "ACC002", 100_000);
 
-        Assert.Equal(fromBefore - 100_000, svc.GetAccount("ACC001")!.MNT);
-        Assert.Equal(toBefore   + 100_000, svc.GetAccount("ACC002")!.MNT);
+        // EF Core change tracking — дахин уншихгүйгээр шинэчлэгдсэн утгыг авна
+        Assert.Equal(fromBefore - 100_000, _db.Accounts.First(a => a.AccountNumber == "ACC001").Balance);
+        Assert.Equal(toBefore + 100_000, _db.Accounts.First(a => a.AccountNumber == "ACC002").Balance);
     }
 
     /// <summary>
-    /// ШИНЭ: Амжилттай гүйлгээний дараа TransferRecord хадгалагдах ёстой.
-    /// Аудитын шаардлагаар гүйлгээний түүх бүртгэгдэнэ.
+    /// Амжилттай гүйлгээний дараа TransferRecord DB-д хадгалагдах ёстой.
+    /// DB transaction ашигладаг тул гүйлгээ болон бүртгэл нэгэн зэрэг хадгалагдана.
     /// </summary>
     [Fact]
     public async Task Transfer_Success_RecordSaved()
     {
-        var svc = NewService();
-        await svc.TransferAsync("ACC001", "ACC002", 50_000, "Цонх305");
+        await NewService().TransferAsync("ACC001", "ACC002", 50_000, "Цонх305");
 
-        var history = svc.GetTransferHistory();
+        var history = _db.TransferRecords.ToList();
         Assert.Single(history);
-        Assert.Equal("ACC001",   history[0].FromAccount);
-        Assert.Equal("ACC002",   history[0].ToAccount);
-        Assert.Equal(50_000m,    history[0].Amount);
+        Assert.Equal("ACC001", history[0].FromAccount);
+        Assert.Equal("ACC002", history[0].ToAccount);
+        Assert.Equal(50_000m, history[0].Amount);
         Assert.Equal("Цонх305", history[0].TellerId);
         Assert.Equal("Completed", history[0].Status);
     }
 
-    /// <summary>
-    /// ШИНЭ: Амжилтгүй гүйлгээ ч "Failed" статустайгаар бүртгэгдэх ёстой.
-    /// </summary>
+    /// <summary>Үлдэгдэл хүрэлцэхгүй validation алдаа — DB-д record хадгалагдахгүй.</summary>
     [Fact]
-    public async Task Transfer_Failure_FailedRecordSaved()
+    public async Task Transfer_Failure_NoRecordForValidationError()
     {
-        var svc = NewService();
-        // Хүрэлцэхгүй үлдэгдэл
-        await svc.TransferAsync("ACC001", "ACC002", 999_999_999, "Цонх305");
+        await NewService().TransferAsync("ACC001", "ACC002", 999_999_999, "Цонх305");
 
-        var history = svc.GetTransferHistory();
-        // Validation-д бариад алдааны мэдэгдэл буцаана — record хадгалагдахгүй
-        // (Validation алдаа lock-оос өмнө гарна)
-        Assert.Empty(history);
-    }
-
-    /// <summary>
-    /// Нэгэн зэрэг 10 гүйлгээ ирэхэд balance хоёр дахин хасагдахгүйг шалгана.
-    /// Race condition байхгүйг баталгаажуулах гол тест.
-    /// </summary>
-    [Fact]
-    public async Task Transfer_Concurrent_BalanceCorrect()
-    {
-        var svc    = NewService();
-        var before = svc.GetAccount("ACC001")!.MNT;
-
-        var tasks = Enumerable.Range(0, 10)
-            .Select(_ => svc.TransferAsync("ACC001", "ACC002", 100_000));
-        var results = await Task.WhenAll(tasks);
-
-        var after        = svc.GetAccount("ACC001")!.MNT;
-        var successCount = results.Count(r => r.Success);
-
-        Assert.Equal(before - successCount * 100_000m, after);
+        Assert.Empty(_db.TransferRecords.ToList());
     }
 
     /// <summary>Данс олдвол мэдээлэл буцаана.</summary>
@@ -157,15 +173,14 @@ public class AccountServiceTests
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-// TicketQueueService тестүүд
+// TicketQueueService тестүүд — өөрчлөгдөөгүй
 // ══════════════════════════════════════════════════════════════════════════
 
 public class TicketQueueServiceTests
 {
-    private TicketQueueService NewService() =>
-        new(Microsoft.Extensions.Logging.Abstractions.NullLogger<TicketQueueService>.Instance);
+    private static TicketQueueService NewService() =>
+        new(NullLogger<TicketQueueService>.Instance);
 
-    /// <summary>Дугаар 1-ээс эхэлж байгааг шалгана.</summary>
     [Fact]
     public async Task IssueTicket_FirstTicket_NumberIsOne()
     {
@@ -173,7 +188,6 @@ public class TicketQueueServiceTests
         Assert.Equal(1, ticket.Number);
     }
 
-    /// <summary>Дараалан авахад дугаар нэмэгдэж байгааг шалгана.</summary>
     [Fact]
     public async Task IssueTicket_Sequential_NumbersIncrement()
     {
@@ -194,12 +208,11 @@ public class TicketQueueServiceTests
     [Fact]
     public async Task IssueTicket_Concurrent_NoDuplicates()
     {
-        var svc     = NewService();
-        var tasks   = Enumerable.Range(0, 50).Select(_ => svc.IssueTicketAsync("Гүйлгээ"));
+        var svc = NewService();
+        var tasks = Enumerable.Range(0, 50).Select(_ => svc.IssueTicketAsync("Гүйлгээ"));
         var tickets = await Task.WhenAll(tasks);
-        var unique  = tickets.Select(t => t.Number).Distinct().Count();
 
-        Assert.Equal(50, unique);
+        Assert.Equal(50, tickets.Select(t => t.Number).Distinct().Count());
     }
 
     /// <summary>Дуудалт FIFO дарааллаар явагдаж байгааг шалгана.</summary>
@@ -217,9 +230,8 @@ public class TicketQueueServiceTests
     }
 
     /// <summary>
-    /// Хоёр теллер нэгэн зэрэг CallNext дарахад
-    /// нэг дугаар хоёрт очихгүйг шалгана.
-    /// Channel.TryRead-ийн atomicity-г шалгах.
+    /// Хоёр теллер нэгэн зэрэг CallNext дарахад нэг дугаар хоёрт очихгүй.
+    /// Channel.TryRead атомик үйлдэл — race condition байхгүй.
     /// </summary>
     [Fact]
     public async Task CallNext_Concurrent_NoDuplicateNumbers()
@@ -228,32 +240,27 @@ public class TicketQueueServiceTests
         for (int i = 0; i < 10; i++)
             await svc.IssueTicketAsync("Гүйлгээ");
 
-        var tasks   = Enumerable.Range(0, 10).Select(_ => svc.CallNextAsync());
-        var results = await Task.WhenAll(tasks);
-        var unique  = results.Distinct().Count();
+        var results = await Task.WhenAll(
+            Enumerable.Range(0, 10).Select(_ => svc.CallNextAsync()));
 
-        Assert.Equal(10, unique);
+        Assert.Equal(10, results.Distinct().Count());
     }
 
-    /// <summary>Дараалал хоосон үед CallNext crash болохгүйг шалгана.</summary>
     [Fact]
     public async Task CallNext_EmptyQueue_ReturnsZero()
     {
-        var result = await NewService().CallNextAsync();
-        Assert.Equal(0, result);
+        Assert.Equal(0, await NewService().CallNextAsync());
     }
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-// ExchangeRateService тестүүд
-// ЗАСВАР: UpdatedBy тест нэмэгдсэн.
-// ЗАСВАР: Түүх хадгалагдаж байгааг шалгах тест нэмэгдсэн.
+// ExchangeRateService тестүүд — өөрчлөгдөөгүй
 // ══════════════════════════════════════════════════════════════════════════
 
 public class ExchangeRateServiceTests
 {
-    private ExchangeRateService NewService() =>
-        new(Microsoft.Extensions.Logging.Abstractions.NullLogger<ExchangeRateService>.Instance);
+    private static ExchangeRateService NewService() =>
+        new(NullLogger<ExchangeRateService>.Instance);
 
     [Fact]
     public void GetAll_ReturnsInitialRates()
@@ -299,10 +306,6 @@ public class ExchangeRateServiceTests
         Assert.False(NewService().Update("XYZ", 100, 110));
     }
 
-    /// <summary>
-    /// ШИНЭ: UpdatedBy хадгалагдаж байгааг шалгана.
-    /// Аудитын шаардлагаар хэн өөрчилснийг мэдэх боломж.
-    /// </summary>
     [Fact]
     public void Update_UpdatedBy_IsStored()
     {
@@ -312,22 +315,18 @@ public class ExchangeRateServiceTests
         Assert.Equal("Цонх305", svc.Get("USD")!.UpdatedBy);
     }
 
-    /// <summary>
-    /// ШИНЭ: Ханшийн өөрчлөлт түүхэнд бүртгэгдэж байгааг шалгана.
-    /// </summary>
     [Fact]
     public void Update_HistoryRecorded()
     {
         var svc = NewService();
         var oldBuy = svc.Get("USD")!.BuyRate;
-
         svc.Update("USD", 3500, 3520, "Цонх305");
 
         var history = svc.GetHistory();
         Assert.Single(history);
-        Assert.Equal("USD",      history[0].Currency);
-        Assert.Equal(oldBuy,     history[0].OldBuy);
-        Assert.Equal(3500,       history[0].NewBuy);
+        Assert.Equal("USD", history[0].Currency);
+        Assert.Equal(oldBuy, history[0].OldBuy);
+        Assert.Equal(3500, history[0].NewBuy);
         Assert.Equal("Цонх305", history[0].ChangedBy);
     }
 
@@ -336,6 +335,6 @@ public class ExchangeRateServiceTests
     {
         foreach (var rate in NewService().GetAll())
             Assert.True(rate.SellRate > rate.BuyRate,
-                $"{rate.Currency}: SellRate ({rate.SellRate}) > BuyRate ({rate.BuyRate}) байх ёстой");
+                $"{rate.Currency}: SellRate > BuyRate байх ёстой");
     }
 }

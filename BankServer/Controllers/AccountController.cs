@@ -12,7 +12,11 @@ namespace BankServer.Controllers;
 /// GET  /api/account              — бүх дансны жагсаалт
 /// GET  /api/account/{id}         — нэг дансны мэдээлэл
 /// POST /api/account/transfer     — мөнгө шилжүүлэх
-/// GET  /api/account/history      — гүйлгээний түүх (ШИНЭ)
+/// GET  /api/account/history      — гүйлгээний түүх
+///
+/// ӨӨРЧЛӨЛТ: AccountService DB-д шилжсэн тул
+///   AccountEntry → BankAccount болж өөрчлөгдсөн.
+///   a.MNT → a.Balance болж өөрчлөгдсөн.
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
@@ -27,7 +31,7 @@ public class AccountController : ControllerBase
     public ActionResult<IEnumerable<AccountResponseDto>> GetAll() =>
         Ok(_svc.GetAllAccounts()
             .Select(a => new AccountResponseDto(
-                a.AccountNumber, a.OwnerName, "MNT", a.MNT, true)));
+                a.AccountNumber, a.OwnerName, a.Currency, a.Balance, a.IsActive)));
 
     /// <summary>Дансны дугаараар нэг данс хайна.</summary>
     [HttpGet("{accountNumber}")]
@@ -36,12 +40,12 @@ public class AccountController : ControllerBase
         var a = _svc.GetAccount(accountNumber);
         if (a is null) return NotFound("Данс олдсонгүй");
         return Ok(new AccountResponseDto(
-            a.AccountNumber, a.OwnerName, "MNT", a.MNT, true));
+            a.AccountNumber, a.OwnerName, a.Currency, a.Balance, a.IsActive));
     }
 
     /// <summary>
     /// А данснаас Б данс руу мөнгө шилжүүлнэ.
-    /// ЗАСВАР: TransferId хариуд нэмэгдсэн, TellerWindowId дамжуулагдана.
+    /// DB transaction ашигладаг тул атомик — хоёул амжилттай эсвэл хоёул цуцлагдана.
     /// </summary>
     [HttpPost("transfer")]
     public async Task<ActionResult<TransferResponse>> Transfer(
@@ -67,8 +71,8 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// Гүйлгээний бүртгэлийн түүх буцаана.
-    /// ШИНЭ: аудитын шаардлагаар нэмэгдсэн.
+    /// Гүйлгээний бүртгэлийн түүх DB-аас буцаана.
+    /// Хамгийн сүүлийн 100 гүйлгээ.
     /// </summary>
     [HttpGet("history")]
     public ActionResult GetHistory() =>
@@ -77,7 +81,7 @@ public class AccountController : ControllerBase
             r.Id,
             r.FromAccount,
             r.ToAccount,
-            Amount    = r.Amount.ToString("N0"),
+            Amount = r.Amount.ToString("N0"),
             r.TellerId,
             r.Status,
             CreatedAt = r.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),

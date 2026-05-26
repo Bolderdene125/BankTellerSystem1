@@ -1,6 +1,9 @@
 using System.Collections.Concurrent;
+using BankServer.Data;
 using BankSystem.Shared.Entities;
 using BankSystem.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace BankServer.Business;
@@ -9,41 +12,97 @@ namespace BankServer.Business;
 /// Валютын ханшийн бизнес логик.
 /// ICurrencyRateRepository interface хэрэгжүүлнэ.
 ///
-/// ЗАСВАР 1: UpdatedBy — хэн теллер ханш өөрчилснийг бүртгэнэ.
-/// ЗАСВАР 2: ILogger нэмэгдсэн.
-/// ЗАСВАР 3: Ханшийн өөрчлөлтийн түүх хадгалагдана.
+/// ӨӨРЧЛӨЛТ: Server restart хийсний дараа ханш анхны утгаараа буцдаг байсан.
+///   Шалтгаан: ConcurrentDictionary in-memory тул restart-д арилдаг байсан.
+///   Засвар:
+///     1. Constructor-т DB-аас ханш уншиж _rates-д дүүргэнэ (startup).
+///     2. Update()-д DB-д хадгална (persist).
+///   Ингэснээр restart хийсний дараа сүүлийн ханш хэвээр байна.
 ///
-/// ConcurrentDictionary: thread-safe, нэмэлт lock шаардахгүй.
+/// Яагаад IServiceScopeFactory:
+///   ExchangeRateService нь Singleton lifetime-тай.
+///   BankDbContext нь Scoped lifetime-тай.
+///   Singleton-д Scoped шууд inject хийж болохгүй — captive dependency алдаа гарна.
+///   IServiceScopeFactory ашиглан хэрэгтэй үед scope үүсгэж DbContext авна.
 /// </summary>
 public class ExchangeRateService : ICurrencyRateRepository
 {
     private readonly ILogger<ExchangeRateService> _logger;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     /// <summary>
     /// Ханшийн санах ой. Key = валютын код (USD, EUR...).
     /// ConcurrentDictionary: олон теллер нэгэн зэрэг ханш өөрчилсөн ч аюулгүй.
+    /// Startup-т DB-аас дүүргэгдэнэ, Update()-д шинэчлэгдэнэ.
     /// </summary>
-    private readonly ConcurrentDictionary<string, RateEntry> _rates = new()
-    {
-        ["USD"] = new("USD", "Америк доллар", 3440, 3460, DateTime.Now, "system"),
-        ["EUR"] = new("EUR", "Евро",           3750, 3780, DateTime.Now, "system"),
-        ["CNY"] = new("CNY", "Хятад юань",      475,  480, DateTime.Now, "system"),
-        ["RUB"] = new("RUB", "Оросын рубль",     38,   40, DateTime.Now, "system"),
-    };
+    private readonly ConcurrentDictionary<string, RateEntry> _rates = new();
 
     /// <summary>
-    /// Ханшийн өөрчлөлтийн түүх.
+    /// Ханшийн өөрчлөлтийн түүх — in-memory.
     /// Аудитын зорилгоор хэн, хэзээ, ямар ханш тогтоосныг хадгална.
+    /// (Restart хийхэд арилна — тухайн session-ийн түүх л хадгалагдана)
     /// </summary>
     private readonly List<RateHistoryEntry> _history = new();
     private readonly object _historyLock = new();
 
-    public ExchangeRateService(ILogger<ExchangeRateService> logger)
+    public ExchangeRateService(
+        ILogger<ExchangeRateService> logger,
+        IServiceScopeFactory scopeFactory)
     {
         _logger = logger;
+        _scopeFactory = scopeFactory;
+
+        // ── Startup: DB-аас ханш уншиж _rates-д дүүргэнэ ────────────
+        // Server эхлэх бүрт DB-аас сүүлийн ханшийг авна.
+        // DB хоосон байвал (эхний удаа) seed өгөгдөл байхгүй тул
+        // anхны утгыг _rates-д хатуу оруулна — дараа нь DB-д хадгална.
+        LoadFromDatabase();
     }
 
-    /// <summary>Бүх ханш — тест sync хэлбэрээр дуудна.</summary>
+    /// <summary>
+    /// DB-аас ханш уншина.
+    /// DB-д ханш байвал тэднийг ашиглана.
+    /// DB хоосон байвал (анх удаа) default утгыг нэмж DB-д хадгална.
+    /// </summary>
+    private void LoadFromDatabase()
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<BankDbContext>();
+
+        var dbRates = db.CurrencyRates.ToList();
+
+        if (dbRates.Count > 0)
+        {
+            // DB-д ханш байна — тэднийг уншина
+            foreach (var r in dbRates)
+            {
+                _rates[r.CurrencyCode] = new RateEntry(
+                    r.CurrencyCode, r.CurrencyName,
+                    r.BuyRate, r.SellRate,
+                    r.UpdatedAt, r.UpdatedBy);
+            }
+            _logger.LogInformation(
+                "DB-аас {Count} валютын ханш уншлаа", dbRates.Count);
+        }
+        else
+        {
+            // DB хоосон — anхны default утгыг тавина
+            // (EnsureCreated seed ажилласан бол энд хүрэхгүй)
+            var defaults = new[]
+            {
+                new RateEntry("USD", "Америк доллар", 3440, 3460, DateTime.Now, "system"),
+                new RateEntry("EUR", "Евро",           3750, 3780, DateTime.Now, "system"),
+                new RateEntry("CNY", "Хятад юань",      475,  480, DateTime.Now, "system"),
+                new RateEntry("RUB", "Оросын рубль",     38,   40, DateTime.Now, "system"),
+            };
+            foreach (var r in defaults)
+                _rates[r.Currency] = r;
+
+            _logger.LogInformation("DB хоосон — default ханш ашиглаж байна");
+        }
+    }
+
+    /// <summary>Бүх ханш буцаана.</summary>
     public IEnumerable<RateEntry> GetAll() => _rates.Values;
 
     /// <summary>Нэг валютын ханш авна.</summary>
@@ -51,23 +110,49 @@ public class ExchangeRateService : ICurrencyRateRepository
         _rates.TryGetValue(currency, out var r) ? r : null;
 
     /// <summary>
-    /// Ханш шинэчилнэ.
-    /// ЗАСВАР: updatedBy — хэн өөрчилснийг бүртгэнэ.
+    /// Ханш шинэчилж in-memory болон DB-д хоёуланд хадгална.
+    /// In-memory: хурдан хандалт — API хариу өгөхөд ашиглана.
+    /// DB: persist — restart хийсний дараа ч хадгалагдана.
     /// </summary>
     public bool Update(string currency, decimal buyRate, decimal sellRate,
         string updatedBy = "")
     {
-        if (!_rates.ContainsKey(currency)) return false;
+        if (!_rates.TryGetValue(currency, out var old)) return false;
 
-        var old = _rates[currency];
+        // ── In-memory шинэчлэл ────────────────────────────────────────
         _rates[currency] = new RateEntry(
-            currency,
-            old.CurrencyName,
+            currency, old.CurrencyName,
             buyRate, sellRate,
-            DateTime.Now,
-            updatedBy);
+            DateTime.Now, updatedBy);
 
-        // Өөрчлөлтийн түүхэнд бүртгэнэ
+        // ── DB-д хадгална ─────────────────────────────────────────────
+        // IServiceScopeFactory: Singleton-д Scoped DbContext ашиглах стандарт арга.
+        // using: scope ашиглаад дараа нь автоматаар dispose хийгдэнэ.
+        try
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<BankDbContext>();
+
+            var entity = db.CurrencyRates
+                .FirstOrDefault(r => r.CurrencyCode == currency);
+
+            if (entity != null)
+            {
+                entity.BuyRate = buyRate;
+                entity.SellRate = sellRate;
+                entity.UpdatedAt = DateTime.Now;
+                entity.UpdatedBy = updatedBy;
+                db.SaveChanges();
+            }
+        }
+        catch (Exception ex)
+        {
+            // DB алдаа гарсан ч in-memory шинэчлэл амжилттай болсон тул
+            // false буцаахгүй — ханш дэлгэцэнд харагдсаар байна
+            _logger.LogError(ex, "Ханш DB-д хадгалахад алдаа: {Currency}", currency);
+        }
+
+        // ── Түүхэнд бүртгэнэ ─────────────────────────────────────────
         lock (_historyLock)
         {
             _history.Add(new RateHistoryEntry(
@@ -76,8 +161,8 @@ public class ExchangeRateService : ICurrencyRateRepository
         }
 
         _logger.LogInformation(
-            "Ханш шинэчлэгдлээ: {Currency} авах {Buy:N0} → {NewBuy:N0}, " +
-            "зарах {Sell:N0} → {NewSell:N0}, теллер: {Teller}",
+            "Ханш шинэчлэгдлээ: {Currency} авах {OldBuy:N0}→{NewBuy:N0}, " +
+            "зарах {OldSell:N0}→{NewSell:N0}, теллер: {Teller}",
             currency, old.BuyRate, buyRate, old.SellRate, sellRate, updatedBy);
 
         return true;
@@ -93,7 +178,7 @@ public class ExchangeRateService : ICurrencyRateRepository
 
     public Task<IEnumerable<CurrencyRate>> GetAllAsync()
     {
-        var result = _rates.Values.Select(r => ToCurrencyRate(r));
+        var result = _rates.Values.Select(ToCurrencyRate);
         return Task.FromResult(result);
     }
 
@@ -109,10 +194,6 @@ public class ExchangeRateService : ICurrencyRateRepository
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Async шинэчлэлт — Controller-аас дуудагдана.
-    /// UpdatedBy талбарыг хүлээн авна.
-    /// </summary>
     public Task<bool> UpdateRateAsync(string code, decimal buy, decimal sell,
         string updatedBy = "")
     {
@@ -126,32 +207,31 @@ public class ExchangeRateService : ICurrencyRateRepository
     {
         CurrencyCode = r.Currency,
         CurrencyName = r.CurrencyName,
-        BuyRate      = r.BuyRate,
-        SellRate     = r.SellRate,
-        UpdatedAt    = r.UpdatedAt,
-        UpdatedBy    = r.UpdatedBy
+        BuyRate = r.BuyRate,
+        SellRate = r.SellRate,
+        UpdatedAt = r.UpdatedAt,
+        UpdatedBy = r.UpdatedBy
     };
 }
 
 /// <summary>
 /// Ханшийн in-memory загвар.
-/// Currency, CurrencyName, BuyRate, SellRate, UpdatedAt, UpdatedBy.
-/// ЗАСВАР: UpdatedBy талбар нэмэгдсэн.
+/// record: immutable — шинэ ханш тогтоохдоо шинэ record үүсгэнэ.
 /// </summary>
 public record RateEntry(
-    string  Currency,
-    string  CurrencyName,
+    string Currency,
+    string CurrencyName,
     decimal BuyRate,
     decimal SellRate,
     DateTime UpdatedAt,
-    string  UpdatedBy);
+    string UpdatedBy);
 
 /// <summary>Ханшийн өөрчлөлтийн түүхийн нэг бичлэг.</summary>
 public record RateHistoryEntry(
-    string   Currency,
-    decimal  OldBuy,
-    decimal  OldSell,
-    decimal  NewBuy,
-    decimal  NewSell,
+    string Currency,
+    decimal OldBuy,
+    decimal OldSell,
+    decimal NewBuy,
+    decimal NewSell,
     DateTime ChangedAt,
-    string   ChangedBy);
+    string ChangedBy);

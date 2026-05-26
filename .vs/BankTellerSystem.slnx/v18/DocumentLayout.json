@@ -3,20 +3,116 @@
   "WorkspaceRootPath": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\business\\exchangerateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\business\\exchangerateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0CDD3FC2-64A7-CDDE-3F98-E0B1B695917D}|SocketServer\\SocketServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\socketserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0CDD3FC2-64A7-CDDE-3F98-E0B1B695917D}|SocketServer\\SocketServer.csproj|solutionrelative:socketserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A8D5345A-786E-14BB-D070-530738656884}|BankTests\\BankTests.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\banktests\\banktests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{A8D5345A-786E-14BB-D070-530738656884}|BankTests\\BankTests.csproj|solutionrelative:banktests\\banktests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A8D5345A-786E-14BB-D070-530738656884}|BankTests\\BankTests.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\banktests\\alltests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A8D5345A-786E-14BB-D070-530738656884}|BankTests\\BankTests.csproj|solutionrelative:banktests\\alltests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\business\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\business\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\business\\exchangerateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\business\\exchangerateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\numberdisplay\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|solutionrelative:numberdisplay\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\numberdisplay\\numberdisplay.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|solutionrelative:numberdisplay\\numberdisplay.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\banksystem.shared\\dtos\\requests\\requests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|solutionrelative:banksystem.shared\\dtos\\requests\\requests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\domain\\dtos\\serverdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\domain\\dtos\\serverdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\numberdisplay\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|solutionrelative:numberdisplay\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\currencydisplay\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|solutionrelative:currencydisplay\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\currencydisplay\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|solutionrelative:currencydisplay\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\currencydisplay\\components\\pages\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|solutionrelative:currencydisplay\\components\\pages\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\hubs\\bankhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\hubs\\bankhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\data\\bankdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\data\\bankdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\controllers\\ticketcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\controllers\\ticketcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\controllers\\exchangeratecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\controllers\\exchangeratecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\banksystem.shared\\interfaces\\interfaces.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|solutionrelative:banksystem.shared\\interfaces\\interfaces.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\business\\ticketqueueservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\business\\ticketqueueservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\banksystem.shared\\enums\\enums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|solutionrelative:banksystem.shared\\enums\\enums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\banksystem.shared\\entities\\transferrecord.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|solutionrelative:banksystem.shared\\entities\\transferrecord.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\banksystem.shared\\entities\\currencyrate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|solutionrelative:banksystem.shared\\entities\\currencyrate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\banksystem.shared\\entities\\bankaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|solutionrelative:banksystem.shared\\entities\\bankaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\banksystem.shared\\dtos\\responses\\responses.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|solutionrelative:banksystem.shared\\dtos\\responses\\responses.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\banksystem.shared\\dtos\\events\\socketmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3471F7E6-A85A-4D92-BBB5-0A791A57EBE0}|BankSystem.Shared\\BankSystem.Shared.csproj|solutionrelative:banksystem.shared\\dtos\\events\\socketmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BB35E8DF-EE15-FEC4-FCBA-2734E2FBE49B}|NumberTerminal\\NumberTerminal.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\numberterminal\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -27,20 +123,8 @@
       "RelativeMoniker": "D:0:0:{4EC2F713-D133-7302-2C07-0A0493C12941}|TellerApp\\TellerApp.csproj|solutionrelative:tellerapp\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\numberdisplay\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|solutionrelative:numberdisplay\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BB35E8DF-EE15-FEC4-FCBA-2734E2FBE49B}|NumberTerminal\\NumberTerminal.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\numberterminal\\numberterminal.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{BB35E8DF-EE15-FEC4-FCBA-2734E2FBE49B}|NumberTerminal\\NumberTerminal.csproj|solutionrelative:numberterminal\\numberterminal.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A8D5345A-786E-14BB-D070-530738656884}|BankTests\\BankTests.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\banktests\\banktests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{A8D5345A-786E-14BB-D070-530738656884}|BankTests\\BankTests.csproj|solutionrelative:banktests\\banktests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\bankserver.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
@@ -88,60 +172,20 @@
       "RelativeMoniker": "D:0:0:{0CDD3FC2-64A7-CDDE-3F98-E0B1B695917D}|SocketServer\\SocketServer.csproj|solutionrelative:socketserver\\socketserver.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0CDD3FC2-64A7-CDDE-3F98-E0B1B695917D}|SocketServer\\SocketServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\socketserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0CDD3FC2-64A7-CDDE-3F98-E0B1B695917D}|SocketServer\\SocketServer.csproj|solutionrelative:socketserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\numberdisplay\\numberdisplay.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|solutionrelative:numberdisplay\\numberdisplay.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\numberdisplay\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|solutionrelative:numberdisplay\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4EC2F713-D133-7302-2C07-0A0493C12941}|TellerApp\\TellerApp.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\tellerapp\\tellerapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{4EC2F713-D133-7302-2C07-0A0493C12941}|TellerApp\\TellerApp.csproj|solutionrelative:tellerapp\\tellerapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\controllers\\exchangeratecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\controllers\\exchangeratecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\currencydisplay\\currencydisplay.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|solutionrelative:currencydisplay\\currencydisplay.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\controllers\\ticketcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\controllers\\ticketcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\business\\ticketqueueservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\business\\ticketqueueservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\numberdisplay\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{72A8231F-E86C-485F-9F8E-2588A8258CDB}|NumberDisplay\\NumberDisplay.csproj|solutionrelative:numberdisplay\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\currencydisplay\\components\\pages\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|solutionrelative:currencydisplay\\components\\pages\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\hubs\\bankhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|solutionrelative:bankserver\\hubs\\bankhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4EC2F713-D133-7302-2C07-0A0493C12941}|TellerApp\\TellerApp.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\tellerapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4EC2F713-D133-7302-2C07-0A0493C12941}|TellerApp\\TellerApp.csproj|solutionrelative:tellerapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\currencydisplay\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|solutionrelative:currencydisplay\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\currencydisplay\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{3068D7DA-C175-4D8E-A826-1F4E2B36DE1A}|CurrencyDisplay\\CurrencyDisplay.csproj|solutionrelative:currencydisplay\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9D2724E3-67A9-6622-001C-FEAAAF1092F7}|BankServer\\BankServer.csproj|c:\\documents\\windowsprogramming\\banktellersystem\\bankserver\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -183,443 +227,167 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "appSettings.json",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\appSettings.json",
-              "RelativeDocumentMoniker": "TellerApp\\appSettings.json",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\appSettings.json",
-              "RelativeToolTip": "TellerApp\\appSettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-18T06:31:11.147Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberTerminal\\appsettings.json",
-              "RelativeDocumentMoniker": "NumberTerminal\\appsettings.json",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberTerminal\\appsettings.json",
-              "RelativeToolTip": "NumberTerminal\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-20T08:38:32.821Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Program.cs",
-              "RelativeDocumentMoniker": "BankServer\\Program.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Program.cs",
-              "RelativeToolTip": "BankServer\\Program.cs",
-              "ViewState": "AgIAACoAAAAAAAAAAAAAAC8AAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-17T11:31:10.348Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ExchangeRateService.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Business\\ExchangeRateService.cs",
-              "RelativeDocumentMoniker": "BankServer\\Business\\ExchangeRateService.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Business\\ExchangeRateService.cs",
-              "RelativeToolTip": "BankServer\\Business\\ExchangeRateService.cs",
-              "ViewState": "AgIAAF0AAAAAAAAAAAAAAGMAAABCAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-17T11:29:39.008Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Controllers\\AccountController.cs",
-              "RelativeDocumentMoniker": "BankServer\\Controllers\\AccountController.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Controllers\\AccountController.cs",
-              "RelativeToolTip": "BankServer\\Controllers\\AccountController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADsAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-17T11:30:14.657Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
               "Title": "AccountService.cs",
               "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Business\\AccountService.cs",
               "RelativeDocumentMoniker": "BankServer\\Business\\AccountService.cs",
               "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Business\\AccountService.cs",
               "RelativeToolTip": "BankServer\\Business\\AccountService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJUAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-17T11:29:28.353Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\appsettings.json",
-              "RelativeDocumentMoniker": "BankServer\\appsettings.json",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\appsettings.json",
-              "RelativeToolTip": "BankServer\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-20T08:50:53.049Z",
+              "DocumentIndex": 5,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Program.cs",
+              "RelativeDocumentMoniker": "BankServer\\Program.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Program.cs",
+              "RelativeToolTip": "BankServer\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T11:31:10.348Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\appsettings.json",
-              "RelativeDocumentMoniker": "NumberDisplay\\appsettings.json",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\appsettings.json",
-              "RelativeToolTip": "NumberDisplay\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAALAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-25T16:57:00.576Z",
+              "DocumentIndex": 4,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "BankServer\\Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "BankServer\\Controllers\\AccountController.cs",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAiwFkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T11:30:14.657Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
-              "Title": "NumberTerminal.csproj",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberTerminal\\NumberTerminal.csproj",
-              "RelativeDocumentMoniker": "NumberTerminal\\NumberTerminal.csproj",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberTerminal\\NumberTerminal.csproj",
-              "RelativeToolTip": "NumberTerminal\\NumberTerminal.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-05-20T08:37:46.656Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "BankTests.csproj",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\BankTests.csproj",
-              "RelativeDocumentMoniker": "BankTests\\BankTests.csproj",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\BankTests.csproj",
-              "RelativeToolTip": "BankTests\\BankTests.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-05-17T11:20:54.772Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "BankServer.csproj",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\BankServer.csproj",
-              "RelativeDocumentMoniker": "BankServer\\BankServer.csproj",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\BankServer.csproj",
-              "RelativeToolTip": "BankServer\\BankServer.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-05-17T11:24:14.542Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "Form1.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\Form1.cs",
-              "RelativeDocumentMoniker": "TellerApp\\Form1.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\Form1.cs",
-              "RelativeToolTip": "TellerApp\\Form1.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAADAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-17T11:56:32.927Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\SocketServer\\Program.cs",
-              "RelativeDocumentMoniker": "SocketServer\\Program.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\SocketServer\\Program.cs",
-              "RelativeToolTip": "SocketServer\\Program.cs",
-              "ViewState": "AgIAAIEAAAAAAAAAAADwv5MAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-17T11:17:17.223Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 25,
-              "Title": "TellerApp.csproj",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\TellerApp.csproj",
-              "RelativeDocumentMoniker": "TellerApp\\TellerApp.csproj",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\TellerApp.csproj",
-              "RelativeToolTip": "TellerApp\\TellerApp.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-05-18T06:30:28.922Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "Form1.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\Form1.cs",
-              "RelativeDocumentMoniker": "NumberDisplay\\Form1.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\Form1.cs",
-              "RelativeToolTip": "NumberDisplay\\Form1.cs",
-              "ViewState": "AgIAAOsAAAAAAAAAAAAIwP4AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-25T16:56:38.052Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
               "Title": "NumberDisplay.csproj",
               "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\NumberDisplay.csproj",
               "RelativeDocumentMoniker": "NumberDisplay\\NumberDisplay.csproj",
               "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\NumberDisplay.csproj",
               "RelativeToolTip": "NumberDisplay\\NumberDisplay.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAxwBUAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAAABUAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2026-05-25T16:59:42.582Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "SocketServer.csproj",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\SocketServer\\SocketServer.csproj",
-              "RelativeDocumentMoniker": "SocketServer\\SocketServer.csproj",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\SocketServer\\SocketServer.csproj",
-              "RelativeToolTip": "SocketServer\\SocketServer.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-05-25T08:28:18.531Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 26,
-              "Title": "ExchangeRateController.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Controllers\\ExchangeRateController.cs",
-              "RelativeDocumentMoniker": "BankServer\\Controllers\\ExchangeRateController.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Controllers\\ExchangeRateController.cs",
-              "RelativeToolTip": "BankServer\\Controllers\\ExchangeRateController.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAQwCQAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-17T11:30:23.511Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "IBankAccountRepository.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Interfaces\\IBankAccountRepository.cs",
-              "RelativeDocumentMoniker": "BankSystem.Shared\\Interfaces\\IBankAccountRepository.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Interfaces\\IBankAccountRepository.cs",
-              "RelativeToolTip": "BankSystem.Shared\\Interfaces\\IBankAccountRepository.cs",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-25T17:15:04.248Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 27,
-              "Title": "CurrencyDisplay.csproj",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\CurrencyDisplay.csproj",
-              "RelativeDocumentMoniker": "CurrencyDisplay\\CurrencyDisplay.csproj",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\CurrencyDisplay.csproj",
-              "RelativeToolTip": "CurrencyDisplay\\CurrencyDisplay.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-05-25T17:16:27.632Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "ICurrencyRateRepository.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Interfaces\\ICurrencyRateRepository.cs",
-              "RelativeDocumentMoniker": "BankSystem.Shared\\Interfaces\\ICurrencyRateRepository.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Interfaces\\ICurrencyRateRepository.cs",
-              "RelativeToolTip": "BankSystem.Shared\\Interfaces\\ICurrencyRateRepository.cs",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-25T17:17:07.117Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 28,
-              "Title": "TicketController.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Controllers\\TicketController.cs",
-              "RelativeDocumentMoniker": "BankServer\\Controllers\\TicketController.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Controllers\\TicketController.cs",
-              "RelativeToolTip": "BankServer\\Controllers\\TicketController.cs",
-              "ViewState": "AgIAAEQAAAAAAAAAAIBJwFQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-17T11:30:06.768Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 29,
-              "Title": "TicketQueueService.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Business\\TicketQueueService.cs",
-              "RelativeDocumentMoniker": "BankServer\\Business\\TicketQueueService.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Business\\TicketQueueService.cs",
-              "RelativeToolTip": "BankServer\\Business\\TicketQueueService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-17T11:29:18.67Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "TicketDTO.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Domain\\DTOs\\TicketDTO.cs",
-              "RelativeDocumentMoniker": "BankServer\\Domain\\DTOs\\TicketDTO.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Domain\\DTOs\\TicketDTO.cs",
-              "RelativeToolTip": "BankServer\\Domain\\DTOs\\TicketDTO.cs",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-20T08:31:51.605Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\Program.cs",
-              "RelativeDocumentMoniker": "NumberDisplay\\Program.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\Program.cs",
-              "RelativeToolTip": "NumberDisplay\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\SocketServer\\Program.cs",
+              "RelativeDocumentMoniker": "SocketServer\\Program.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\SocketServer\\Program.cs",
+              "RelativeToolTip": "SocketServer\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-25T16:57:20.39Z",
+              "WhenOpened": "2026-05-17T11:17:17.223Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ExchangeRateService.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Business\\ExchangeRateService.cs",
+              "RelativeDocumentMoniker": "BankServer\\Business\\ExchangeRateService.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Business\\ExchangeRateService.cs",
+              "RelativeToolTip": "BankServer\\Business\\ExchangeRateService.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAQwEkAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T11:29:39.008Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\Form1.cs",
+              "RelativeDocumentMoniker": "NumberDisplay\\Form1.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\Form1.cs",
+              "RelativeToolTip": "NumberDisplay\\Form1.cs",
+              "ViewState": "AgIAAB4BAAAAAAAAAAAAwCcBAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-25T16:56:38.052Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BankTests.csproj",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\BankTests.csproj",
+              "RelativeDocumentMoniker": "BankTests\\BankTests.csproj",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\BankTests.csproj",
+              "RelativeToolTip": "BankTests\\BankTests.csproj",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAYwBkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-17T11:20:54.772Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AllTests.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\AllTests.cs",
+              "RelativeDocumentMoniker": "BankTests\\AllTests.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\AllTests.cs",
+              "RelativeToolTip": "BankTests\\AllTests.cs",
+              "ViewState": "AgIAAD0BAAAAAAAAAAAiwFMBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-26T03:54:41.371Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Requests.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\DTOs\\Requests\\Requests.cs",
+              "RelativeDocumentMoniker": "BankSystem.Shared\\DTOs\\Requests\\Requests.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\DTOs\\Requests\\Requests.cs",
+              "RelativeToolTip": "BankSystem.Shared\\DTOs\\Requests\\Requests.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-26T04:51:50.287Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ServerDTOs.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Domain\\DTOs\\ServerDTOs.cs",
+              "RelativeDocumentMoniker": "BankServer\\Domain\\DTOs\\ServerDTOs.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Domain\\DTOs\\ServerDTOs.cs",
+              "RelativeToolTip": "BankServer\\Domain\\DTOs\\ServerDTOs.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-26T05:28:44.395Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\appsettings.json",
+              "RelativeDocumentMoniker": "NumberDisplay\\appsettings.json",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\appsettings.json",
+              "RelativeToolTip": "NumberDisplay\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-25T16:57:00.576Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 12,
-              "Title": "NumberDisplay.csproj",
-              "DocumentMoniker": "C:\\1\\BankTellerSystem\\NumberDisplay\\NumberDisplay.csproj",
-              "RelativeDocumentMoniker": "..\\..\\..\\1\\BankTellerSystem\\NumberDisplay\\NumberDisplay.csproj",
-              "ToolTip": "C:\\1\\BankTellerSystem\\NumberDisplay\\NumberDisplay.csproj",
-              "RelativeToolTip": "..\\..\\..\\1\\BankTellerSystem\\NumberDisplay\\NumberDisplay.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-05-25T12:36:34.77Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "Form1.cs",
-              "DocumentMoniker": "C:\\1\\BankTellerSystem\\NumberDisplay\\Form1.cs",
-              "RelativeDocumentMoniker": "..\\..\\..\\1\\BankTellerSystem\\NumberDisplay\\Form1.cs",
-              "ToolTip": "C:\\1\\BankTellerSystem\\NumberDisplay\\Form1.cs",
-              "RelativeToolTip": "..\\..\\..\\1\\BankTellerSystem\\NumberDisplay\\Form1.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-25T12:04:03.373Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\1\\BankTellerSystem\\NumberDisplay\\appsettings.json",
-              "RelativeDocumentMoniker": "..\\..\\..\\1\\BankTellerSystem\\NumberDisplay\\appsettings.json",
-              "ToolTip": "C:\\1\\BankTellerSystem\\NumberDisplay\\appsettings.json",
-              "RelativeToolTip": "..\\..\\..\\1\\BankTellerSystem\\NumberDisplay\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-25T12:04:15.305Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 31,
-              "Title": "Index.razor",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\Components\\Pages\\Index.razor",
-              "RelativeDocumentMoniker": "CurrencyDisplay\\Components\\Pages\\Index.razor",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\Components\\Pages\\Index.razor",
-              "RelativeToolTip": "CurrencyDisplay\\Components\\Pages\\Index.razor",
-              "ViewState": "AgIAAJMAAAAAAAAAAAAIwK0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-17T12:36:35.251Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 32,
-              "Title": "BankHub.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Hubs\\BankHub.cs",
-              "RelativeDocumentMoniker": "BankServer\\Hubs\\BankHub.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Hubs\\BankHub.cs",
-              "RelativeToolTip": "BankServer\\Hubs\\BankHub.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-17T11:29:49.697Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 33,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\Program.cs",
-              "RelativeDocumentMoniker": "TellerApp\\Program.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\Program.cs",
-              "RelativeToolTip": "TellerApp\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-18T05:14:52.869Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "ExchangeRateServiceTests.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\ExchangeRateServiceTests.cs",
-              "RelativeDocumentMoniker": "BankTests\\ExchangeRateServiceTests.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\ExchangeRateServiceTests.cs",
-              "RelativeToolTip": "BankTests\\ExchangeRateServiceTests.cs",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-25T07:10:47.03Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "AccountServiceTests.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\AccountServiceTests.cs",
-              "RelativeDocumentMoniker": "BankTests\\AccountServiceTests.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\AccountServiceTests.cs",
-              "RelativeToolTip": "BankTests\\AccountServiceTests.cs",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-25T07:10:20.517Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 34,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\Program.cs",
-              "RelativeDocumentMoniker": "CurrencyDisplay\\Program.cs",
-              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\Program.cs",
-              "RelativeToolTip": "CurrencyDisplay\\Program.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAYwCcAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-17T12:36:04.44Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 35,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\appsettings.json",
               "RelativeDocumentMoniker": "CurrencyDisplay\\appsettings.json",
@@ -632,7 +400,426 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\Program.cs",
+              "RelativeDocumentMoniker": "CurrencyDisplay\\Program.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\Program.cs",
+              "RelativeToolTip": "CurrencyDisplay\\Program.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAIBJwCQAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T12:36:04.44Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Index.razor",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\Components\\Pages\\Index.razor",
+              "RelativeDocumentMoniker": "CurrencyDisplay\\Components\\Pages\\Index.razor",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\Components\\Pages\\Index.razor",
+              "RelativeToolTip": "CurrencyDisplay\\Components\\Pages\\Index.razor",
+              "ViewState": "AgIAAHwBAAAAAAAAAABRwHsBAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-17T12:36:35.251Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\appsettings.json",
+              "RelativeDocumentMoniker": "BankServer\\appsettings.json",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\appsettings.json",
+              "RelativeToolTip": "BankServer\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-20T08:50:53.049Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "BankHub.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Hubs\\BankHub.cs",
+              "RelativeDocumentMoniker": "BankServer\\Hubs\\BankHub.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Hubs\\BankHub.cs",
+              "RelativeToolTip": "BankServer\\Hubs\\BankHub.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAIBJwBAAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T11:29:49.697Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "BankDbContext.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Data\\BankDbContext.cs",
+              "RelativeDocumentMoniker": "BankServer\\Data\\BankDbContext.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Data\\BankDbContext.cs",
+              "RelativeToolTip": "BankServer\\Data\\BankDbContext.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAwwDAAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-26T05:24:57.046Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "ExchangeRateController.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Controllers\\ExchangeRateController.cs",
+              "RelativeDocumentMoniker": "BankServer\\Controllers\\ExchangeRateController.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Controllers\\ExchangeRateController.cs",
+              "RelativeToolTip": "BankServer\\Controllers\\ExchangeRateController.cs",
+              "ViewState": "AgIAADgAAAAAAAAAAAAgwCQAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T11:30:23.511Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 20,
+              "Title": "Interfaces.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Interfaces\\Interfaces.cs",
+              "RelativeDocumentMoniker": "BankSystem.Shared\\Interfaces\\Interfaces.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Interfaces\\Interfaces.cs",
+              "RelativeToolTip": "BankSystem.Shared\\Interfaces\\Interfaces.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-26T05:02:17.499Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "TicketController.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Controllers\\TicketController.cs",
+              "RelativeDocumentMoniker": "BankServer\\Controllers\\TicketController.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Controllers\\TicketController.cs",
+              "RelativeToolTip": "BankServer\\Controllers\\TicketController.cs",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAgwFQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T11:30:06.768Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "TicketQueueService.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Business\\TicketQueueService.cs",
+              "RelativeDocumentMoniker": "BankServer\\Business\\TicketQueueService.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Business\\TicketQueueService.cs",
+              "RelativeToolTip": "BankServer\\Business\\TicketQueueService.cs",
+              "ViewState": "AgIAAGgAAAAAAAAAAAAgwIMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T11:29:18.67Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "TransferRecord.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Entities\\TransferRecord.cs",
+              "RelativeDocumentMoniker": "BankSystem.Shared\\Entities\\TransferRecord.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Entities\\TransferRecord.cs",
+              "RelativeToolTip": "BankSystem.Shared\\Entities\\TransferRecord.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAYwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-26T05:01:01.032Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "CurrencyRate.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Entities\\CurrencyRate.cs",
+              "RelativeDocumentMoniker": "BankSystem.Shared\\Entities\\CurrencyRate.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Entities\\CurrencyRate.cs",
+              "RelativeToolTip": "BankSystem.Shared\\Entities\\CurrencyRate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-26T05:00:38.143Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "BankAccount.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Entities\\BankAccount.cs",
+              "RelativeDocumentMoniker": "BankSystem.Shared\\Entities\\BankAccount.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Entities\\BankAccount.cs",
+              "RelativeToolTip": "BankSystem.Shared\\Entities\\BankAccount.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-26T05:00:32.444Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "Responses.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\DTOs\\Responses\\Responses.cs",
+              "RelativeDocumentMoniker": "BankSystem.Shared\\DTOs\\Responses\\Responses.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\DTOs\\Responses\\Responses.cs",
+              "RelativeToolTip": "BankSystem.Shared\\DTOs\\Responses\\Responses.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAowBAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-26T04:58:09.225Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "SocketMessage.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\DTOs\\Events\\SocketMessage.cs",
+              "RelativeDocumentMoniker": "BankSystem.Shared\\DTOs\\Events\\SocketMessage.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\DTOs\\Events\\SocketMessage.cs",
+              "RelativeToolTip": "BankSystem.Shared\\DTOs\\Events\\SocketMessage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-26T04:49:42.88Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Enums.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Enums\\Enums.cs",
+              "RelativeDocumentMoniker": "BankSystem.Shared\\Enums\\Enums.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Enums\\Enums.cs",
+              "RelativeToolTip": "BankSystem.Shared\\Enums\\Enums.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-26T04:42:06.966Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberTerminal\\appsettings.json",
+              "RelativeDocumentMoniker": "NumberTerminal\\appsettings.json",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberTerminal\\appsettings.json",
+              "RelativeToolTip": "NumberTerminal\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-20T08:38:32.821Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "appSettings.json",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\appSettings.json",
+              "RelativeDocumentMoniker": "TellerApp\\appSettings.json",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\appSettings.json",
+              "RelativeToolTip": "TellerApp\\appSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-18T06:31:11.147Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "NumberTerminal.csproj",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberTerminal\\NumberTerminal.csproj",
+              "RelativeDocumentMoniker": "NumberTerminal\\NumberTerminal.csproj",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberTerminal\\NumberTerminal.csproj",
+              "RelativeToolTip": "NumberTerminal\\NumberTerminal.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-20T08:37:46.656Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "BankServer.csproj",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\BankServer.csproj",
+              "RelativeDocumentMoniker": "BankServer\\BankServer.csproj",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\BankServer.csproj",
+              "RelativeToolTip": "BankServer\\BankServer.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-17T11:24:14.542Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\Form1.cs",
+              "RelativeDocumentMoniker": "TellerApp\\Form1.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\Form1.cs",
+              "RelativeToolTip": "TellerApp\\Form1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T11:56:32.927Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "TellerApp.csproj",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\TellerApp.csproj",
+              "RelativeDocumentMoniker": "TellerApp\\TellerApp.csproj",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\TellerApp.csproj",
+              "RelativeToolTip": "TellerApp\\TellerApp.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-18T06:30:28.922Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "SocketServer.csproj",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\SocketServer\\SocketServer.csproj",
+              "RelativeDocumentMoniker": "SocketServer\\SocketServer.csproj",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\SocketServer\\SocketServer.csproj",
+              "RelativeToolTip": "SocketServer\\SocketServer.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-25T08:28:18.531Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "IBankAccountRepository.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Interfaces\\IBankAccountRepository.cs",
+              "RelativeDocumentMoniker": "BankSystem.Shared\\Interfaces\\IBankAccountRepository.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Interfaces\\IBankAccountRepository.cs",
+              "RelativeToolTip": "BankSystem.Shared\\Interfaces\\IBankAccountRepository.cs",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-25T17:15:04.248Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "CurrencyDisplay.csproj",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\CurrencyDisplay.csproj",
+              "RelativeDocumentMoniker": "CurrencyDisplay\\CurrencyDisplay.csproj",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\CurrencyDisplay.csproj",
+              "RelativeToolTip": "CurrencyDisplay\\CurrencyDisplay.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-25T17:16:27.632Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "ICurrencyRateRepository.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Interfaces\\ICurrencyRateRepository.cs",
+              "RelativeDocumentMoniker": "BankSystem.Shared\\Interfaces\\ICurrencyRateRepository.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\Interfaces\\ICurrencyRateRepository.cs",
+              "RelativeToolTip": "BankSystem.Shared\\Interfaces\\ICurrencyRateRepository.cs",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-25T17:17:07.117Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "TicketDTO.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Domain\\DTOs\\TicketDTO.cs",
+              "RelativeDocumentMoniker": "BankServer\\Domain\\DTOs\\TicketDTO.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Domain\\DTOs\\TicketDTO.cs",
+              "RelativeToolTip": "BankServer\\Domain\\DTOs\\TicketDTO.cs",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-20T08:31:51.605Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\Program.cs",
+              "RelativeDocumentMoniker": "NumberDisplay\\Program.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberDisplay\\Program.cs",
+              "RelativeToolTip": "NumberDisplay\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-25T16:57:20.39Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "NumberDisplay.csproj",
+              "DocumentMoniker": "C:\\1\\BankTellerSystem\\NumberDisplay\\NumberDisplay.csproj",
+              "RelativeDocumentMoniker": "..\\..\\..\\1\\BankTellerSystem\\NumberDisplay\\NumberDisplay.csproj",
+              "ToolTip": "C:\\1\\BankTellerSystem\\NumberDisplay\\NumberDisplay.csproj",
+              "RelativeToolTip": "..\\..\\..\\1\\BankTellerSystem\\NumberDisplay\\NumberDisplay.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-25T12:36:34.77Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\1\\BankTellerSystem\\NumberDisplay\\Form1.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\1\\BankTellerSystem\\NumberDisplay\\Form1.cs",
+              "ToolTip": "C:\\1\\BankTellerSystem\\NumberDisplay\\Form1.cs",
+              "RelativeToolTip": "..\\..\\..\\1\\BankTellerSystem\\NumberDisplay\\Form1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-25T12:04:03.373Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\1\\BankTellerSystem\\NumberDisplay\\appsettings.json",
+              "RelativeDocumentMoniker": "..\\..\\..\\1\\BankTellerSystem\\NumberDisplay\\appsettings.json",
+              "ToolTip": "C:\\1\\BankTellerSystem\\NumberDisplay\\appsettings.json",
+              "RelativeToolTip": "..\\..\\..\\1\\BankTellerSystem\\NumberDisplay\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-25T12:04:15.305Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\Program.cs",
+              "RelativeDocumentMoniker": "TellerApp\\Program.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\Program.cs",
+              "RelativeToolTip": "TellerApp\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-18T05:14:52.869Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "ExchangeRateServiceTests.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\ExchangeRateServiceTests.cs",
+              "RelativeDocumentMoniker": "BankTests\\ExchangeRateServiceTests.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\ExchangeRateServiceTests.cs",
+              "RelativeToolTip": "BankTests\\ExchangeRateServiceTests.cs",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-25T07:10:47.03Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "AccountServiceTests.cs",
+              "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\AccountServiceTests.cs",
+              "RelativeDocumentMoniker": "BankTests\\AccountServiceTests.cs",
+              "ToolTip": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\AccountServiceTests.cs",
+              "RelativeToolTip": "BankTests\\AccountServiceTests.cs",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-25T07:10:20.517Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
               "Title": "TicketQueueServiceTests.cs",
               "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankTests\\TicketQueueServiceTests.cs",
               "RelativeDocumentMoniker": "BankTests\\TicketQueueServiceTests.cs",
@@ -643,7 +830,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 47,
               "Title": "launchsettings.json",
               "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\launchsettings.json",
               "RelativeDocumentMoniker": "BankServer\\launchsettings.json",
@@ -656,7 +843,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 48,
               "Title": "Form1.cs",
               "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberTerminal\\Form1.cs",
               "RelativeDocumentMoniker": "NumberTerminal\\Form1.cs",
@@ -669,7 +856,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 49,
               "Title": "Form1.Designer.cs",
               "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberTerminal\\Form1.Designer.cs",
               "RelativeDocumentMoniker": "NumberTerminal\\Form1.Designer.cs",
@@ -682,7 +869,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 50,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\NumberTerminal\\Program.cs",
               "RelativeDocumentMoniker": "NumberTerminal\\Program.cs",
@@ -695,7 +882,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 51,
               "Title": "Form1.cs [Design]",
               "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\Form1.cs",
               "RelativeDocumentMoniker": "TellerApp\\Form1.cs",
@@ -707,7 +894,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 52,
               "Title": "Form1.Designer.cs",
               "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\TellerApp\\Form1.Designer.cs",
               "RelativeDocumentMoniker": "TellerApp\\Form1.Designer.cs",
@@ -720,7 +907,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 53,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankServer\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "BankServer\\Properties\\launchSettings.json",
@@ -733,7 +920,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 54,
               "Title": "NotFound.razor",
               "DocumentMoniker": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\CurrencyDisplay\\Components\\Pages\\NotFound.razor",
               "RelativeDocumentMoniker": "CurrencyDisplay\\Components\\Pages\\NotFound.razor",

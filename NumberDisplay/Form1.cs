@@ -294,15 +294,6 @@ public partial class Form1 : Form
                     ShowNumber(num, $"⚡ Цонх {RoomId} руу ирнэ үү", t);
                     break;
                 }
-
-                case "SHOW_NUMBER":
-                {
-                    var p   = JsonDocument.Parse(msg.Payload ?? "{}").RootElement;
-                    int num = p.GetProperty("number").GetInt32();
-                    string t = p.GetProperty("time").GetString() ?? "";
-                    ShowNumber(num, "Дугаар олгогдлоо", t);
-                    break;
-                }
             }
         }
         catch (Exception ex)
