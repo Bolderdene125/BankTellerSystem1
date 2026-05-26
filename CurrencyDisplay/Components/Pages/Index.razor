@@ -1,64 +1,280 @@
-﻿@page "/"
+@page "/"
 @rendermode InteractiveServer
 @using Microsoft.AspNetCore.SignalR.Client
 @implements IAsyncDisposable
 @inject BankServerConfig ServerConfig
 
-<h2 style="text-align:center; color:#005a9e; font-size:2rem; margin:20px 0">
-    💱 ВАЛЮТЫН ХАНШ
-</h2>
+@* ══════════════════════════════════════════════════════════════════════════
+   Хэрэглэгчийн Банк — Валютын Ханшийн Дэлгэц
+   Blazor Server-side rendering + SignalR realtime
 
-<p style="text-align:center; font-size:0.9rem; color:gray">
-    Шинэчлэгдсэн: @_lastUpdated.ToString("HH:mm:ss")
-    @if (_connected)
+   ЗАСВАР: <table> → card-row grid (responsive, илүү харагцуу)
+   ЗАСВАР: "шинэ" badge — 8 секундын дараа автоматаар арилна
+   ЗАСВАР: Navbar + hero section нэмэгдсэн
+   ЗАСВАР: Animated connection dot
+   ══════════════════════════════════════════════════════════════════════════ *@
+
+<style>
+    /* ── Хэрэглэгчийн Банк өнгөний палитр ─────────────────────────────── */
+    :root {
+        --hb-navy:   #0B2C4A;
+        --hb-blue:   #1565C0;
+        --hb-sky:    #E3F0FF;
+        --hb-border: #BBDEFB;
+        --hb-green:  #1B7F3A;
+        --hb-red:    #C0392B;
+        --hb-gold:   #C8940A;
+        --hb-sub:    #64748B;
+        --hb-text:   #1A1A2E;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: #F0F4F8;
+        min-height: 100vh;
+    }
+
+    /* ── Navbar ─────────────────────────────────────────────────────────── */
+    .hb-nav {
+        background: var(--hb-navy);
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .hb-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 17px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: .3px;
+    }
+
+    .hb-logo-icon {
+        width: 32px;
+        height: 32px;
+        background: white;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hb-nav-status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: rgba(255,255,255,.6);
+    }
+
+    /* ── Animated connection dot ─────────────────────────────────────────
+       CSS @keyframes — SignalR холбогдсон/салсан байдлыг харуулна.        */
+    .conn-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .conn-dot.connected {
+        background: #4CAF50;
+        animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    .conn-dot.disconnected {
+        background: #f44336;
+    }
+
+    @@keyframes pulse-dot {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: .3; }
+    }
+
+    /* ── Hero section ────────────────────────────────────────────────────── */
+    .hb-hero {
+        background: linear-gradient(135deg, var(--hb-navy) 0%, var(--hb-blue) 100%);
+        padding: 24px 28px 20px;
+        color: white;
+    }
+
+    .hb-hero-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        opacity: .6;
+        margin-bottom: 4px;
+    }
+
+    .hb-hero-title {
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    .hb-hero-sub {
+        font-size: 12px;
+        opacity: .5;
+        margin-top: 2px;
+    }
+
+    /* ── Rates container ─────────────────────────────────────────────────── */
+    .hb-body {
+        padding: 20px;
+        max-width: 860px;
+        margin: 0 auto;
+    }
+
+    .rate-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* ── Rate row card ───────────────────────────────────────────────────── */
+    .rate-row {
+        background: white;
+        border: 1px solid var(--hb-border);
+        border-radius: 10px;
+        padding: 14px 18px;
+        display: grid;
+        grid-template-columns: 56px 1fr 140px 140px;
+        align-items: center;
+        gap: 12px;
+        transition: background .4s, border-color .4s;
+    }
+
+    /*
+     * "Шинэ" байдал — теллер ханш өөрчилсний дараа 8 секунд дотор харагдана.
+     * IsNew = true үед warm yellow background.
+     */
+    .rate-row.is-new {
+        background: #FFFDE7;
+        border-color: #F0D080;
+    }
+
+    .rate-flag { font-size: 28px; }
+
+    .rate-name { font-weight: 700; font-size: 15px; color: var(--hb-navy); }
+    .rate-full { font-size: 11px; color: var(--hb-sub); margin-top: 2px; }
+
+    .rate-col { text-align: right; }
+    .rate-col-label {
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        color: #aaa;
+        margin-bottom: 2px;
+    }
+
+    .rate-buy  { font-size: 16px; font-weight: 700; color: var(--hb-red); }
+    .rate-sell { font-size: 16px; font-weight: 700; color: var(--hb-green); }
+
+    .new-badge {
+        display: inline-block;
+        font-size: 9px;
+        font-weight: 600;
+        background: #FFF3CD;
+        color: #856404;
+        padding: 2px 7px;
+        border-radius: 12px;
+        margin-top: 3px;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    .hb-footer {
+        background: var(--hb-sky);
+        border-top: 1px solid var(--hb-border);
+        padding: 12px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        color: var(--hb-sub);
+        margin-top: 20px;
+    }
+
+    /* Loading */
+    .loading {
+        text-align: center;
+        padding: 40px;
+        color: var(--hb-sub);
+        font-size: 14px;
+    }
+</style>
+
+<!-- ── Navbar ─────────────────────────────────────────────────────────── -->
+<nav class="hb-nav">
+    <div class="hb-logo">
+        <div class="hb-logo-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <circle cx="9" cy="9" r="7" stroke="#0B2C4A" stroke-width="1.5"/>
+                <line x1="9" y1="2" x2="9" y2="16" stroke="#1565C0" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="2" y1="9" x2="16" y2="9" stroke="#1565C0" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+        ХЭРЭГЛЭГЧИЙН БАНК
+    </div>
+    <div class="hb-nav-status">
+        <div class="conn-dot @(_connected ? "connected" : "disconnected")"></div>
+        @(_connected ? "Realtime холбогдсон" : "Холбогдоогүй")
+    </div>
+</nav>
+
+<!-- ── Hero ───────────────────────────────────────────────────────────── -->
+<div class="hb-hero">
+    <div class="hb-hero-label">Валютын ханш</div>
+    <div class="hb-hero-title">Өнөөдрийн ханш</div>
+    <div class="hb-hero-sub">Шинэчлэгдсэн: @_lastUpdated.ToString("HH:mm:ss")</div>
+</div>
+
+<!-- ── Rates ──────────────────────────────────────────────────────────── -->
+<div class="hb-body">
+    @if (_rates.Count == 0)
     {
-        <span style="color:green"> ● Холбогдсон</span>
+        <div class="loading">Ачааллаж байна...</div>
     }
     else
     {
-        <span style="color:red"> ● Холбогдоогүй</span>
-    }
-</p>
-
-@if (_rates.Count == 0)
-{
-    <p style="text-align:center">Ачааллаж байна...</p>
-}
-else
-{
-    <table style="width:100%; max-width:700px; margin:0 auto;
-        border-collapse:collapse; font-size:1.3rem;">
-        <thead>
-            <tr style="background:#005a9e; color:white;">
-                <th style="padding:14px; text-align:left">Валют</th>
-                <th style="padding:14px; text-align:right">Авах (₮)</th>
-                <th style="padding:14px; text-align:right">Зарах (₮)</th>
-                <th style="padding:14px; text-align:right">Цаг</th>
-            </tr>
-        </thead>
-        <tbody>
+        <div class="rate-grid">
             @foreach (var rate in _rates.Values)
             {
-                <tr style="border-bottom:1px solid #ddd;
-                    background:@(rate.IsNew ? "#fffde7" : "white")">
-                    <td style="padding:14px; font-weight:bold; font-size:1.5rem">
-                        @GetFlag(rate.Currency) @rate.Currency
-                    </td>
-                    <td style="padding:14px; text-align:right; color:#cc3300">
-                        @rate.BuyRate.ToString("N0")
-                    </td>
-                    <td style="padding:14px; text-align:right; color:#006600">
-                        @rate.SellRate.ToString("N0")
-                    </td>
-                    <td style="padding:14px; text-align:right;
-                        font-size:0.9rem; color:gray">
-                        @rate.UpdatedAt.ToString("HH:mm")
-                    </td>
-                </tr>
+                <div class="rate-row @(rate.IsNew ? "is-new" : "")">
+                    <div class="rate-flag">@GetFlag(rate.Currency)</div>
+                    <div>
+                        <div class="rate-name">@rate.Currency</div>
+                        <div class="rate-full">@GetName(rate.Currency)</div>
+                    </div>
+                    <div class="rate-col">
+                        <div class="rate-col-label">АВАХ</div>
+                        <div class="rate-buy">@rate.BuyRate.ToString("N0")₮</div>
+                    </div>
+                    <div class="rate-col">
+                        <div class="rate-col-label">ЗАРАХ</div>
+                        <div class="rate-sell">@rate.SellRate.ToString("N0")₮</div>
+                        @if (rate.IsNew)
+                        {
+                            <div class="new-badge">● шинэ</div>
+                        }
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
-}
+        </div>
+    }
+
+    <div class="hb-footer">
+        <span>Хэрэглэгчийн Банк — Теллерийн Систем</span>
+        <span>© @DateTime.Now.Year</span>
+    </div>
+</div>
 
 @code {
     private Dictionary<string, RateView> _rates = new();
@@ -78,14 +294,14 @@ else
         try
         {
             using var http = new HttpClient();
-            var rates = await http.GetFromJsonAsync<List<ExchangeRate>>(
+            var rates = await http.GetFromJsonAsync<List<ExchangeRateDto>>(
                 $"{ServerConfig.Url}/api/exchangerate");
 
             if (rates is null) return;
 
             foreach (var r in rates)
-                _rates[r.Currency] = new RateView(
-                    r.Currency, r.BuyRate, r.SellRate, r.UpdatedAt, false);
+                _rates[r.CurrencyCode] = new RateView(
+                    r.CurrencyCode, r.BuyRate, r.SellRate, r.UpdatedAt, r.UpdatedBy, false);
         }
         catch (Exception ex)
         {
@@ -96,7 +312,7 @@ else
     /// <summary>
     /// SignalR Hub-д холбогдоно.
     /// Теллер ханш өөрчлөхөд "ReceiveRateUpdate" event ирж
-    /// дэлгэц refresh хийлгүйгээр шинэчлэгдэнэ.
+    /// дэлгэц refresh хийлгүйгээр шинэчлэгдэнэ (realtime).
     /// </summary>
     private async Task ConnectHub()
     {
@@ -107,14 +323,27 @@ else
                 .WithAutomaticReconnect()
                 .Build();
 
-            _hub.On<ExchangeRate>("ReceiveRateUpdate", rate =>
+            _hub.On<ExchangeRateDto>("ReceiveRateUpdate", rate =>
             {
-                _rates[rate.Currency] = new RateView(
-                    rate.Currency, rate.BuyRate, rate.SellRate,
-                    rate.UpdatedAt, IsNew: true);
+                _rates[rate.CurrencyCode] = new RateView(
+                    rate.CurrencyCode, rate.BuyRate, rate.SellRate,
+                    rate.UpdatedAt, rate.UpdatedBy, IsNew: true);
                 _lastUpdated = DateTime.Now;
                 InvokeAsync(StateHasChanged);
+
+                // 8 секундын дараа "шинэ" badge-г устгана
+                _ = ClearNewBadgeAsync(rate.CurrencyCode);
             });
+
+            // Холболт тасарвал _connected = false → улаан dot
+            _hub.Closed += _ => {
+                _connected = false;
+                return InvokeAsync(StateHasChanged);
+            };
+            _hub.Reconnected += _ => {
+                _connected = true;
+                return InvokeAsync(StateHasChanged);
+            };
 
             await _hub.StartAsync();
             _connected = true;
@@ -126,25 +355,57 @@ else
         }
     }
 
-    private static string GetFlag(string currency) => currency switch
+    /// <summary>
+    /// 8 секундын дараа "шинэ" badge-г устгана.
+    /// Realtime шинэчлэлтийг хэрэглэгчэд тодруулж харуулах зорилготой.
+    /// </summary>
+    private async Task ClearNewBadgeAsync(string currency)
+    {
+        await Task.Delay(8000);
+        if (_rates.ContainsKey(currency))
+            _rates[currency] = _rates[currency] with { IsNew = false };
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private static string GetFlag(string c) => c switch
     {
         "USD" => "🇺🇸",
         "EUR" => "🇪🇺",
         "CNY" => "🇨🇳",
         "RUB" => "🇷🇺",
-        _ => "💰"
+        _     => "💱"
     };
 
-    /// <summary>Component устах үед SignalR холболтыг хаана.</summary>
+    private static string GetName(string c) => c switch
+    {
+        "USD" => "Америк доллар",
+        "EUR" => "Евро",
+        "CNY" => "Хятад юань",
+        "RUB" => "Оросын рубль",
+        _     => c
+    };
+
     public async ValueTask DisposeAsync()
     {
         if (_hub is not null)
             await _hub.DisposeAsync();
     }
 
-    record RateView(string Currency, decimal BuyRate, decimal SellRate,
-                    DateTime UpdatedAt, bool IsNew);
+    // ── Local record types ────────────────────────────────────────────────
 
-    record ExchangeRate(string Currency, decimal BuyRate, decimal SellRate,
-                        DateTime UpdatedAt);
+    record RateView(
+        string   Currency,
+        decimal  BuyRate,
+        decimal  SellRate,
+        DateTime UpdatedAt,
+        string   UpdatedBy,
+        bool     IsNew);
+
+    record ExchangeRateDto(
+        string   CurrencyCode,
+        string   CurrencyName,
+        decimal  BuyRate,
+        decimal  SellRate,
+        DateTime UpdatedAt,
+        string   UpdatedBy = "");
 }

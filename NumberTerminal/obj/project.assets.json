@@ -157,6 +157,16 @@
         "build": {
           "buildTransitive/net8.0/_._": {}
         }
+      },
+      "BankSystem.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/BankSystem.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/BankSystem.Shared.dll": {}
+        }
       }
     }
   },
@@ -394,10 +404,16 @@
         "microsoft.extensions.primitives.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "BankSystem.Shared/1.0.0": {
+      "type": "project",
+      "path": "../BankSystem.Shared/BankSystem.Shared.csproj",
+      "msbuildProject": "../BankSystem.Shared/BankSystem.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net10.0-windows": [
+      "BankSystem.Shared >= 1.0.0",
       "Microsoft.Extensions.Configuration >= 10.0.0",
       "Microsoft.Extensions.Configuration.Json >= 10.0.0"
     ]
@@ -434,7 +450,11 @@
         "net10.0-windows": {
           "framework": "net10.0-windows7.0",
           "targetAlias": "net10.0-windows",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\BankSystem.Shared.csproj": {
+              "projectPath": "C:\\Documents\\WindowsProgramming\\BankTellerSystem\\BankSystem.Shared\\BankSystem.Shared.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

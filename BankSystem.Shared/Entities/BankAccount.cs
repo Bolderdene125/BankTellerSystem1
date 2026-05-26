@@ -1,7 +1,8 @@
 namespace BankSystem.Shared.Entities
 {
     /// <summary>
-    /// Харилцагчийн банкны данс
+    /// Харилцагчийн банкны данс.
+    /// IBankAccountRepository гэрээний дагуу ашиглагдана.
     /// </summary>
     public class BankAccount
     {

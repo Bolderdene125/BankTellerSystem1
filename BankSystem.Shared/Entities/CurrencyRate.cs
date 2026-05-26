@@ -1,9 +1,13 @@
 namespace BankSystem.Shared.Entities
 {
     /// <summary>
-    /// Валютын ханшийн мэдээлэл — теллер өөрчилж, дэлгэцэнд realtime харагдана
+    /// Валютын ханшийн загвар.
+    /// Теллер өөрчилж, CurrencyDisplay Blazor-д realtime харагдана.
+    /// UpdatedBy — хэн теллер ханш өөрчилснийг бүртгэнэ (аудит).
+    ///
+    /// ЗАСВАР: currencyRate → CurrencyRate (C# PascalCase дүрэм)
     /// </summary>
-    public class currencyRate
+    public class CurrencyRate
     {
         /// <summary>Өгөгдлийн сангийн өвөрмөц дугаар</summary>
         public int Id { get; set; }
@@ -14,16 +18,19 @@ namespace BankSystem.Shared.Entities
         /// <summary>Валютын бүтэн нэр (жишээ: Америк доллар)</summary>
         public string CurrencyName { get; set; } = string.Empty;
 
-        /// <summary>Худалдан авах ханш (банк харилцагчаас валют авах үнэ)</summary>
+        /// <summary>Авах ханш — банк харилцагчаас валют авах үнэ</summary>
         public decimal BuyRate { get; set; }
 
-        /// <summary>Худалдах ханш (банк харилцагчид валют зарах үнэ)</summary>
+        /// <summary>Зарах ханш — банк харилцагчид валют зарах үнэ</summary>
         public decimal SellRate { get; set; }
 
         /// <summary>Ханш сүүлд өөрчлөгдсөн огноо цаг</summary>
         public DateTime UpdatedAt { get; set; }
 
-        /// <summary>Ханш өөрчилсөн теллерийн цонхны ID</summary>
-        public int UpdatedByTellerWindowId { get; set; }
+        /// <summary>
+        /// Ханш өөрчилсөн теллерийн цонхны ID.
+        /// Аудитын шаардлагаар хэн өөрчилснийг мэдэх боломж олгоно.
+        /// </summary>
+        public string UpdatedBy { get; set; } = string.Empty;
     }
 }

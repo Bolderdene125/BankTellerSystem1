@@ -1,7 +1,8 @@
 namespace BankSystem.Shared.Enums
 {
     /// <summary>
-    /// Дугаарын тасалбарын төлөв
+    /// Дугаарын тасалбарын төлөв.
+    /// TicketQueueService дотор ашиглагдана.
     /// </summary>
     public enum TicketStatus
     {

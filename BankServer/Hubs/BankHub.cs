@@ -1,24 +1,48 @@
-﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BankServer.Hubs;
 
 /// <summary>
-/// Клиентүүд энэ Hub-д WebSocket-ээр холбогдоно.
-/// Controller-ууд IHubContext дамжуулж бүх клиентэд мэдэгдэл явуулна.
+/// SignalR Hub — клиентүүд WebSocket-ээр холбогдоно.
+///
+/// Холболтын урсгал:
+///   CurrencyDisplay Blazor  ──┐
+///   SocketServer            ──┤── BankHub ── Controller-ууд
+///                             └── broadcast (ReceiveRateUpdate,
+///                                            ReceiveTellerCall,
+///                                            ReceiveNumberUpdate)
+///
+/// Controller-ууд IHubContext&lt;BankHub&gt; дамжуулж бүх клиентэд явуулна.
+/// ЗАСВАР: ILogger нэмэгдсэн.
 /// </summary>
 public class BankHub : Hub
 {
-    /// <summary>Клиент холбогдоход консолд бүртгэнэ.</summary>
+    private readonly ILogger<BankHub> _logger;
+
+    public BankHub(ILogger<BankHub> logger)
+    {
+        _logger = logger;
+    }
+
+    /// <summary>Клиент холбогдоход бүртгэнэ.</summary>
     public override async Task OnConnectedAsync()
     {
-        Console.WriteLine($"[Hub] Холбогдлоо: {Context.ConnectionId}");
+        _logger.LogInformation("SignalR клиент холбогдлоо: {ConnectionId}",
+            Context.ConnectionId);
         await base.OnConnectedAsync();
     }
 
-    /// <summary>Клиент салахад консолд бүртгэнэ.</summary>
+    /// <summary>Клиент салахад бүртгэнэ.</summary>
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        Console.WriteLine($"[Hub] Салалаа: {Context.ConnectionId}");
+        if (exception is null)
+            _logger.LogInformation("SignalR клиент салалаа: {ConnectionId}",
+                Context.ConnectionId);
+        else
+            _logger.LogWarning(exception,
+                "SignalR клиент алдаатай салалаа: {ConnectionId}",
+                Context.ConnectionId);
+
         await base.OnDisconnectedAsync(exception);
     }
 }
