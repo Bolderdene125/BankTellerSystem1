@@ -17,14 +17,6 @@
       {
         "Path": "SocketServer\\SocketServer.csproj",
         "Action": "Start"
-      },
-      {
-        "Path": "NumberDisplay\\NumberDisplay.csproj",
-        "Action": "Start"
-      },
-      {
-        "Path": "TellerApp\\TellerApp.csproj",
-        "Action": "Start"
       }
     ]
   }

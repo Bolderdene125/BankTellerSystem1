@@ -6,9 +6,9 @@ using System.Text;
 using System.Text.Json;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
-Console.WriteLine("╔══════════════════════════════════════╗");
-Console.WriteLine("║  ХЭРЭГЛЭГЧИЙН БАНК — SOCKET СЕРВЕР  ║");
-Console.WriteLine("╚══════════════════════════════════════╝");
+Console.WriteLine("══════════════════════════════════════");
+Console.WriteLine("  ХЭРЭГЛЭГЧИЙН БАНК — SOCKET СЕРВЕР   ");
+Console.WriteLine("══════════════════════════════════════");
 
 // roomId → TcpClient: "305" → тухайн теллерийн дэлгэц
 // Зөвхөн тухайн roomId-тай NumberDisplay-д TCP явуулна

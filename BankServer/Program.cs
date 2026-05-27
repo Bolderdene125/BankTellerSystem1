@@ -37,14 +37,7 @@ try
         opt.UseSqlite("Data Source=bank.db"));
 
     // ── AccountService: Scoped — BankDbContext inject хийдэг тул ────────
-    //
-    // ӨМНӨ (буруу):
-    //   builder.Services.AddSingleton<AccountService>();
-    //
-    // ДАРАА (зөв):
-    //   builder.Services.AddScoped<AccountService>();
-    //
-    // Яагаад:
+
     //   BankDbContext нь Scoped lifetime-тай (HTTP request бүрт шинэ instance).
     //   Singleton сервис дотор Scoped inject хийхийг ASP.NET Core хориглодог.
     //   Хориглохгүй бол runtime-д "Cannot consume scoped service from singleton"

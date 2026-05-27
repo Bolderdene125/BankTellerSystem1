@@ -3,12 +3,12 @@ using BankServer.Data;
 using BankSystem.Shared.Entities;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace BankTests;
 
-// ══════════════════════════════════════════════════════════════════════════
 // AccountService тестүүд
 //
 // Яагаад SQLite :memory: ашигласан:
@@ -19,7 +19,6 @@ namespace BankTests;
 //   Шийдэл: Microsoft.Data.Sqlite-ийн "Data Source=:memory:" ашиглана.
 //   SQLite :memory: нь транзакцийг бүрэн дэмждэг — жинхэнэ DB-тэй адил.
 //   SqliteConnection-г тест туршид амьд байлгаж, дуусмагц Close() хийнэ.
-// ══════════════════════════════════════════════════════════════════════════
 
 public class AccountServiceTests : IDisposable
 {
@@ -260,7 +259,7 @@ public class TicketQueueServiceTests
 public class ExchangeRateServiceTests
 {
     private static ExchangeRateService NewService() =>
-        new(NullLogger<ExchangeRateService>.Instance);
+        new(NullLogger<ExchangeRateService>.Instance, new NullScopeFactory());
 
     [Fact]
     public void GetAll_ReturnsInitialRates()
@@ -337,4 +336,29 @@ public class ExchangeRateServiceTests
             Assert.True(rate.SellRate > rate.BuyRate,
                 $"{rate.Currency}: SellRate > BuyRate байх ёстой");
     }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// NullScopeFactory — тестэд ExchangeRateService-г DB-гүй үүсгэхэд хэрэгтэй
+//
+// ExchangeRateService constructor дотор LoadFromDatabase() дуудагддаг.
+// LoadFromDatabase() нь _scopeFactory.CreateScope() дуудна.
+// Тестэд DB байхгүй тул NullScopeFactory нь юу ч хийхгүй scope буцаана.
+// Ингэснээр ExchangeRateService default утгаараа (USD, EUR, CNY, RUB) эхэлнэ.
+// ══════════════════════════════════════════════════════════════════════════
+
+public class NullScopeFactory : IServiceScopeFactory
+{
+    public IServiceScope CreateScope() => new NullServiceScope();
+}
+
+public class NullServiceScope : IServiceScope
+{
+    public IServiceProvider ServiceProvider => new NullServiceProvider();
+    public void Dispose() { }
+}
+
+public class NullServiceProvider : IServiceProvider
+{
+    public object? GetService(Type serviceType) => null;
 }

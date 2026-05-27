@@ -48,7 +48,7 @@ public class AccountService : IBankAccountRepository
     ///
     /// Deadlock-аас сэргийлэх:
     ///   EF Core + SQLite row-level lock ашигладаг тул
-    ///   манай SemaphoreSlim lock шаардлагагүй болсон.
+    ///   SemaphoreSlim lock шаардлагагүй
     ///   SQLite serializable transaction isolation ашигладаг.
     /// </summary>
     public async Task<(bool Success, string Message, Guid? TransferId)> TransferAsync(

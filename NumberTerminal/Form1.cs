@@ -1,6 +1,7 @@
-using System.Net.Http.Json;
-using System.Drawing.Printing;
+using BankSystem.Shared.DTOs.Responses;
 using Microsoft.Extensions.Configuration;
+using System.Drawing.Printing;
+using System.Net.Http.Json;
 
 namespace NumberTerminal;
 
@@ -108,7 +109,7 @@ public partial class Form1 : Form
         {
             Name      = "lblNumber",
             Text      = "—",
-            Font      = new Font("Segoe UI", 96, FontStyle.Bold),
+            Font      = new Font("Segoe UI", 66, FontStyle.Bold),
             ForeColor = HBBlue,
             Location  = new Point(0, 36),
             Size      = new Size(420, 120),
@@ -211,7 +212,7 @@ public partial class Form1 : Form
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content
-                    .ReadFromJsonAsync<IssueTicketResponseDto>();
+                    .ReadFromJsonAsync<IssueTicketResponse>();
 
                 if (result is not null)
                 {
@@ -311,6 +312,3 @@ public partial class Form1 : Form
         ((Label)Controls["lblQueue"]!).Text            = "";
     }
 }
-
-/// <summary>IssueTicket endpoint-ийн хариу.</summary>
-record IssueTicketResponseDto(int TicketNumber, DateTime IssuedAt, int QueueCount);

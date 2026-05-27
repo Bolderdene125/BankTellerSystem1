@@ -310,7 +310,7 @@ public partial class Form1 : Form
         {
             var res = await _http.GetAsync($"{ServerUrl}/api/ticket/status");
             if (!res.IsSuccessStatusCode) return;
-            var r = await res.Content.ReadFromJsonAsync<StatusResponse>();
+            var r = await res.Content.ReadFromJsonAsync<IssueTicketResponse>();
             UpdateStatBox(_tabPanes[0], "lblCurrentNum",
                 r?.CurrentNumber.ToString("D3") ?? "---");
             UpdateStatBox(_tabPanes[0], "lblQueueCount",
@@ -717,7 +717,3 @@ public partial class Form1 : Form
         => MessageBox.Show(msg, "Мэдэгдэл",
             MessageBoxButtons.OK, MessageBoxIcon.Information);
 }
-
-// ── Local DTOs ────────────────────────────────────────────────────────────
-record StatusResponse(int CurrentNumber, int QueueCount);
-record MessageResponse(string? Message);
